@@ -1,13 +1,14 @@
 import React from 'react';
 import MainHeader from "@/components/MainHeader";
+import MainFooter from "@/components/MainFooter";
 
 function Layout({children} : { children : React.ReactElement}) {
     return (
-        <main>
+        <>
             <MainHeader/>
-            <div className=""></div>
             {children}
-        </main>
+            <MainFooter/>
+        </>
     );
 }
 

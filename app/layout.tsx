@@ -4,7 +4,7 @@ import "./globals.css";
 import React from "react";
 import {ThemeProvider} from "@/app/theme-provider";
 
-const roboto = Roboto({subsets: ["latin"], weight: ["500"]});
+const roboto = Roboto({subsets: ["latin"], weight: ["300","400","500","700"]});
 
 export const metadata: Metadata = {
     title: "S shop",
@@ -19,7 +19,7 @@ export default function RootLayout({
     return (
         <html lang="en">
         <head>
-            <title>S shop</title>
+            <title>S Shop</title>
             <link rel="icon" href="/favicon.ico" sizes="any"/>
             <link
                 rel="apple-touch-icon"
