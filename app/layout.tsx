@@ -3,8 +3,9 @@ import {Roboto} from "next/font/google";
 import "./globals.css";
 import React from "react";
 import {ThemeProvider} from "@/app/theme-provider";
+import StoreProvider from "@/app/StoreProvider";
 
-const roboto = Roboto({subsets: ["latin"], weight: ["300","400","500","700"]});
+const roboto = Roboto({subsets: ["latin"], weight: ["300", "400", "500", "700"]});
 
 export const metadata: Metadata = {
     title: "S shop",
@@ -16,6 +17,7 @@ export default function RootLayout({
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
+
     return (
         <html lang="en">
         <head>
@@ -35,7 +37,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-            {children}
+            <StoreProvider>
+                {children}
+            </StoreProvider>
         </ThemeProvider>
         </body>
         </html>

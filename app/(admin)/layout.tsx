@@ -3,9 +3,9 @@ import React from 'react';
 import {Button} from "@/components/ui/button";
 import Logo from "@/components/logo";
 import Link from 'next/link';
-import { BiSolidCategory } from "react-icons/bi";
+import {BiSolidCategory} from "react-icons/bi";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import { FaHome } from "react-icons/fa";
+import {FaHome} from "react-icons/fa";
 import {usePathname} from "next/navigation";
 import {
     File,
@@ -20,7 +20,7 @@ import {
     ShoppingCart,
     Users2
 } from "lucide-react";
-import {Tooltip, TooltipContent, TooltipTrigger,  TooltipProvider} from "@/components/ui/tooltip";
+import {Tooltip, TooltipContent, TooltipTrigger, TooltipProvider} from "@/components/ui/tooltip";
 import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
 import {
     Breadcrumb,
@@ -41,33 +41,33 @@ import Image from "next/image";
 
 const links = [
     {
-        href : "/dashboard",
+        href: "/dashboard",
         name: "trang quản trị",
-        icon: <FaHome />
+        icon: <FaHome/>
     },
     {
-        href : "/dashboard/categories",
+        href: "/dashboard/categories",
         name: "danh mục",
-        icon: <BiSolidCategory />
+        icon: <BiSolidCategory/>
     },
     {
-        href : "/dashboard/products",
+        href: "/dashboard/products",
         name: "sản phẩm",
-        icon: <BiSolidCategory />
+        icon: <BiSolidCategory/>
     },
     {
-        href : "/dashboard/deliveries",
+        href: "/dashboard/deliveries",
         name: "vận chuyển",
-        icon: <BiSolidCategory />
+        icon: <BiSolidCategory/>
     },
     {
-        href : "/dashboard/orders",
+        href: "/dashboard/orders",
         name: "đơn hàng",
-        icon: <BiSolidCategory />
+        icon: <BiSolidCategory/>
     }
 ]
 
-function Layout({children} : { children : React.ReactElement}) {
+function Layout({children}: { children: React.ReactElement }) {
     const path = usePathname();
     // <div className="left-bar w-[20%]">
     //     <Logo className="pl-10" href={'/dashboard'}/>
@@ -89,28 +89,34 @@ function Layout({children} : { children : React.ReactElement}) {
     //     {children}
     // </div>
     return (
-        <div className="w-full h-screen py-5 px-14 flex min-h-screen flex-col bg-muted/40">
-            <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+        <div className="w-full h-screen py-5 pl-[10rem] pr-14 flex min-h-screen flex-col bg-muted/40">
+            <aside className="fixed w-[8rem] inset-y-0 left-0 z-10 hidden flex-col border-r bg-background sm:flex">
                 <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-                    <Link
-                        href="#"
-                        className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-                    >
-                        <Package2 className="h-4 w-4 transition-all group-hover:scale-110"/>
-                        <span className="sr-only">Acme Inc</span>
-                    </Link>
                     <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger className="w-[10rem]" asChild>
+                                <Link
+                                    href="#"
+                                    className="flex items-center justify-center rounded-lg
+                                     text-muted-foreground transition-colors
+                                     hover:text-foreground md:h-8 md:w-8 xl:w-[5rem] xl:h-max"
+                                >
+                                    <Home className="text-[5rem] w-[15rem]"/>
+                                </Link>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">Dashboard</TooltipContent>
+                        </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Link
                                     href="#"
-                                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                                    className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
                                 >
-                                    <Home className="h-5 w-5"/>
-                                    <span className="sr-only">Dashboard</span>
+                                    <Package2 className="h-10 w-10 transition-all group-hover:scale-110"/>
+                                    <span className="sr-only">Acme Inc</span>
                                 </Link>
                             </TooltipTrigger>
-                            <TooltipContent side="right">Dashboard</TooltipContent>
+                            <TooltipContent side="right">Product</TooltipContent>
                         </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -168,9 +174,9 @@ function Layout({children} : { children : React.ReactElement}) {
                             <TooltipTrigger asChild>
                                 <Link
                                     href="#"
-                                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                                    className="flex h-[10rem] text-2xl w-[10rem] items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                                 >
-                                    <Settings className="h-5 w-5"/>
+                                    <Settings className="h-[10rem] text-2xl w-[10rem]"/>
                                     <span className="sr-only">Settings</span>
                                 </Link>
                             </TooltipTrigger>
@@ -240,18 +246,18 @@ function Layout({children} : { children : React.ReactElement}) {
                         <BreadcrumbList>
                             <BreadcrumbItem>
                                 <BreadcrumbLink asChild>
-                                    <Link href="#">Dashboard</Link>
+                                    <Link className="text-2xl" href="#">Dashboard</Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator/>
                             <BreadcrumbItem>
                                 <BreadcrumbLink asChild>
-                                    <Link href="#">Products</Link>
+                                    <Link className="text-2xl" href="#">Products</Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator/>
                             <BreadcrumbItem>
-                                <BreadcrumbPage>All Products</BreadcrumbPage>
+                                <BreadcrumbPage className="text-2xl">All Products</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -260,7 +266,7 @@ function Layout({children} : { children : React.ReactElement}) {
                         <Input
                             type="search"
                             placeholder="Search..."
-                            className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+                            className="w-full outline-0 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                         />
                     </div>
                     <DropdownMenu>

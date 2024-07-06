@@ -7,7 +7,7 @@ import Link from "next/link";
 
 function Hero() {
     return (
-        <section className="w-full mt-5 bg-primary xl:min-h-[40rem] xl:max-h-[45dvh] rounded-[5px]">
+        <section className="w-full mt-[4rem] bg-primary xl:min-h-[40rem] xl:max-h-[45dvh] rounded-[5px]">
             <Carousel className="w-full h-full xl:min-h-[40rem] flex py-10 px-20">
                 <CarouselContent className="w-full h-full">
                     <CarouselItem className="h-full grid grid-cols-2 place-items-center">
@@ -31,7 +31,7 @@ function Hero() {
                             </div>
                         </div>
                         <div className="relative mx-auto w-[70rem] select-none cursor-pointer h-[30rem]">
-                            <Image alt={''} fill className="object-cover" src={'/images/sections/iPhone-15-Pro-Max-running-Genshin-Impact.png'}/>
+                            <Image alt={''} sizes={'(max-width: 1200px) 5   0vw'} fill className="object-cover" src={'/images/sections/iPhone-15-Pro-Max-running-Genshin-Impact.png'}/>
                         </div>
                     </CarouselItem>
                     <CarouselItem className="h-full grid grid-cols-2 place-items-center">
@@ -58,7 +58,7 @@ function Hero() {
                             </div>
                         </div>
                         <div className="relative mx-auto w-[38rem] select-none cursor-pointer h-[34rem]">
-                            <Image alt={''} fill src={'/images/sections/iPhone-14-plusred.png'}/>
+                            <Image alt={''} fill sizes={''} src={'/images/sections/iPhone-14-plusred.png'}/>
                         </div>
                     </CarouselItem>
                     <CarouselItem className="h-full grid grid-cols-2 place-items-center">
@@ -83,7 +83,7 @@ function Hero() {
                             </div>
                         </div>
                         <div className="relative mx-auto w-[35rem] select-none cursor-pointer h-[35rem]">
-                            <Image alt={''} fill src={'/images/sections/avt-samsung-s22-trang.png'}/>
+                            <Image alt={''} sizes={''} fill src={'/images/sections/avt-samsung-s22-trang.png'}/>
                         </div>
                     </CarouselItem>
                 </CarouselContent>

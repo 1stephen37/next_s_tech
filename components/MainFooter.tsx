@@ -7,8 +7,8 @@ function MainFooter() {
     const linkStyle = "text-[1.6rem]";
 
     return (
-        <footer className="mt-10 text-primary h-[30rem]">
-            <div className="container border-t p-5 border-solid border-primary flex items-center justify-between">
+        <footer className="mt-[4rem] shadow-2xl text-primary h-[30rem]">
+            <div className="container  border-t p-5 border-solid border-primary flex items-center justify-between">
                 <div className="">
                     <Logo className={"text-primary"} />
                     <div className="">

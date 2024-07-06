@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import React, {useEffect, useState} from 'react';
+import React, {FormEvent, FormEventHandler, useEffect, useState} from 'react';
 import { FaRegCircleQuestion } from "react-icons/fa6"
 import Link from "next/link";
 import {FaUser, FaHeart, FaShoppingCart, FaSearch} from "react-icons/fa";
@@ -11,15 +11,12 @@ import Logo from "@/components/logo";
 import { FaRegUser } from "react-icons/fa";
 import {MdOutlineMenu} from "react-icons/md";
 import {
-    Sheet, SheetClose,
+    Sheet,
     SheetContent,
-    SheetDescription,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
     SheetTrigger
 } from "@/components/ui/sheet";
-import {Button} from "@/components/ui/button";
+import { useAppSelector, useAppDispatch } from '@/redux/hooks'
+import {searchChange} from "@/redux/reducers/search.reducer";
 
 const links = [
     {
@@ -40,24 +37,41 @@ const links = [
 ]
 
 function MainHeader() {
-    const linkStyle = "text-primary capitalize text-[2rem]";
+    const [header, setHeader] = useState(false);
+    useEffect(() => {
+        const listenerScroll = () => {
+            window.scrollY > 50 ? setHeader(true) : setHeader(false);
+        };
+        window.addEventListener('scroll', listenerScroll);
+        return () => window.removeEventListener('scroll', listenerScroll);
+    }, []);
     const path = usePathname();
+    const search = useAppSelector((state) => state.search.searchContent)
+    const dispatch = useAppDispatch()
+
+    const handleSearchSubmit: FormEventHandler<HTMLFormElement> = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        console.log(search);
+    };
 
     return (
         <>
             <TopHeader/>
-            <header className={`w-full h-max mt-[2rem] py-[2rem] sticky top-0 z-30 transition-all
-            py-4 bg-white shadow-lg dark:bg-accent`}>
+            <header className={`w-full h-max py-[2rem] sticky top-0 z-30 bg-white transition-all dark:bg-accent ${header ? 'shadow-lg' : ''}`}>
                 <div className="container flex justify-between">
                     <Logo href={'/'}/>
                     <div className="w-max flex items-center gap-5">
-                        <div className="relative h-max">
+                        <form onSubmit={handleSearchSubmit} className="relative h-max">
                             <input
+                                value={search}
+                                onChange={(e) => dispatch(searchChange(e.target.value))}
                                 className="text-[1.6rem] pl-[1rem] border-[0.2px] border-solid border-primary pr-[2.5rem] rounded-[5px] w-[60rem] h-[5rem] outline-none"
                                 placeholder="Bạn đang tìm gì ?" type="text"/>
-                            <FaSearch
-                                className="absolute text-primary top-5 right-4 font-black cursor-pointer text-[2rem]"/>
-                        </div>
+                            <button type='submit'>
+                                <FaSearch
+                                    className="absolute text-primary top-5 right-4 font-black cursor-pointer text-[2rem]"/>
+                            </button>
+                        </form>
                         <Sheet>
                             <SheetTrigger asChild>
                                 <div className="bg-primary rounded-[3px] h-max p-1  w-max">

@@ -31,10 +31,10 @@ const imagesBrands = [
 
 function Brands() {
     return (
-        <section className="w-full h-[10rem] mt-10 dark:bg-primary rounded-[5px] flex justify-between items-center">
+        <section className="w-full h-[10rem] mt-[4rem] dark:bg-primary rounded-[5px] flex justify-between items-center">
             {imagesBrands.map((image, index) => (
                 <div key={index} className="relative select-none w-[20rem] h-[10rem]">
-                    <Image alt={image.name} fill className={'object-contain'} src={`/images/sections/${image.src}`}/>
+                    <Image alt={image.name} fill sizes={''} className={'object-contain'} src={`/images/sections/${image.src}`}/>
                 </div>
             ))}
         </section>
