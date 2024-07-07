@@ -4,7 +4,7 @@ import searchReducer from "@/redux/reducers/search.reducer";
 export const makeStore = () => {
     return configureStore({
         reducer: {
-            search: searchReducer
+            search: searchReducer,
         },
     })
 }

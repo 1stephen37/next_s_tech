@@ -59,6 +59,6 @@ html {
 }
 
 .p {
-    @apply text-[1.8rem] font-light
+    @apply text-[1.8rem] font-normal
 }
 

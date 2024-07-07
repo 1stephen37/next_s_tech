@@ -1,9 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import React, {FormEvent, FormEventHandler, useEffect, useState} from 'react';
-import { FaRegCircleQuestion } from "react-icons/fa6"
 import Link from "next/link";
-import {FaUser, FaHeart, FaShoppingCart, FaSearch} from "react-icons/fa";
+import {FaSearch} from "react-icons/fa";
 import { LuShoppingCart } from "react-icons/lu";
 import TopHeader from "@/components/TopHeader";
 import {usePathname} from "next/navigation";
