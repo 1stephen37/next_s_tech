@@ -12,6 +12,15 @@ export const FetchGet = (url: string) => fetch(url, {
     method: "GET"
 }).then(res => res.json());
 
+export const FetchGetWithContinueUrl = async (url: string, {arg}: { arg: { continueUrl? : string } }) => {
+    console.log(arg.continueUrl);
+    return fetch(url + arg?.continueUrl, {
+        headers: {'Content-Type': 'application/json'},
+        method: 'GET',
+    }).then(res => res.json())
+        .catch((err) => err.message)
+}
+
 // export const FetchPost = async (url: string, { body } : {body : {}}) => fetch(url, {
 //     headers: {'Content-Type': 'application/json'},
 //     method: "POST",

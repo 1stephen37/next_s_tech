@@ -13,6 +13,7 @@ import Link from "next/link";
 import {SubmitHandler, useForm} from "react-hook-form";
 import UsersModel from "@/models/users/users.model";
 import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
+import {useRouter} from "next/navigation";
 
 type Inputs = {
     email: string,
@@ -20,6 +21,7 @@ type Inputs = {
 };
 
 function Page() {
+    const router = useRouter()
     const {trigger, isMutating} = UsersModel.UserSignIn();
 
     const {register, handleSubmit, formState: {errors}}
@@ -33,6 +35,9 @@ function Page() {
     return (
         <section className={"mt-[4rem] container"}>
             <Card className="mx-auto shadow-md h-max min-h-[47dvh] w-[40%] border-primary">
+                <Button onClick={() => router.push('/', { scroll: false })} variant='link' className="mt-[1rem] text-gray-500">
+                    Trở về trang chủ
+                </Button>
                 <CardHeader>
                     <CardTitle className="text-[3rem] text-center">Đăng nhập</CardTitle>
                 </CardHeader>
@@ -60,9 +65,9 @@ function Page() {
                         </div>
                         <div className="grid gap-5 relative">
                             <div className="flex items-center">
-                                <Label htmlFor="password" className="text-[2rem]">Password</Label>
+                                <Label htmlFor="password" className="text-[2rem]">Mật khẩu</Label>
                                 <Link href="/forget-password" className="ml-auto inline-block text-[1.4rem] underline">
-                                    Forgot your password?
+                                    Quên mật khẩu ?
                                 </Link>
                             </div>
                             <Input id="password" type={showPassword ? 'text' : 'password'}
@@ -73,7 +78,7 @@ function Page() {
                                            message: "Mật khẩu phải có ít nhất 8 kí tự"
                                        },
                                        validate: (value) => {
-                                           if(!(/^(?=.*[A-Z])(?=.*[!@#$%^&*_+/])(?=.*[0-9]).{8,}$/.test(value))) {
+                                           if (!(/^(?=.*[A-Z])(?=.*[!@#$%^&*_+/])(?=.*[0-9]).{8,}$/.test(value))) {
                                                return "Mật khẩu phải có số, chữ cái in hoa và kí tự đặc biệt"
                                            }
                                            return true;

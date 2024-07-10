@@ -13,6 +13,7 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import React, {useState} from "react";
 import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import UsersModel from "@/models/users/users.model";
+import { useRouter } from 'next/navigation'
 
 type UserCreate = {
     name: string,
@@ -23,6 +24,7 @@ type UserCreate = {
 }
 
 export default function LoginForm() {
+    const router = useRouter()
     const {trigger, isMutating, error} = UsersModel.UserSignUp()
     const {register, handleSubmit, formState: {errors}} = useForm<UserCreate>();
     const onSubmit: SubmitHandler<UserCreate> = async (formData) => {
@@ -32,8 +34,11 @@ export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(true);
 
     return (
-        <section className="mt-[4rem] container ">
+        <section className="mt-[4rem] container">
             <Card className="mx-auto shadow-md h-max min-h-[47dvh] w-[40%] border-primary">
+                <Button onClick={() => router.push('/', { scroll: false })} variant='link' className="mt-[1rem] text-left text-gray-500">
+                    Trở về trang chủ
+                </Button>
                 <CardHeader>
                     <CardTitle className="text-[3rem] text-center">Đăng kí</CardTitle>
                 </CardHeader>

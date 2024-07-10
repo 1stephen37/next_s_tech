@@ -12,6 +12,15 @@ const BrandsModel = {
             isLoading,
             isError: error
         }
+    },
+    GetBrandsByLimit(limit: number) {
+        const { data : brands, error, isLoading } : { data : { data : Brand[]}, error: Error | any, isLoading: boolean } =
+            useSWR(this.url + `?limit=${limit}`, FetchGet)
+        return {
+            data: brands?.data,
+            isLoading,
+            isError: error
+        }
     }
 }
 

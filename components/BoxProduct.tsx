@@ -13,40 +13,47 @@ type Product = {
     brand: string;
     price: string;
     sale: number;
-    index : number
+    index: number;
+    views: number
 }
 
-function BoxProduct({id, name, image, brand, price, sale, index}: Product) {
+function BoxProduct({id, name, image, brand, price, sale, index, views}: Product) {
 
     const router = useRouter()
-    const handleDetailProduct = (id_product: string) => {
+    const handleDetailProduct = () => {
         router.push(`products/${id}`);
     }
 
     return (
-        <motion.div  initial={{ x: "100%" }}
-                     animate={{ x: "0%" }}
-                     transition={{ duration: 0.5, delay: ((2 + index) - 0.5) * 0.1 }}
+        <motion.div initial={{x: "100%"}}
+                    animate={{x: "0%"}}
+                    transition={{duration: 0.5, delay: ((2 + index) - 0.5) * 0.1}}
         >
             <motion.div
-                onClick={() => handleDetailProduct(id)}
+                onClick={() => handleDetailProduct()}
                 whileHover={{scale: 1.05, boxShadow: '0.5px 0.5px 5px 2px rgba(0, 0, 0, 0.3)'}}
                 transition={{duration: 0.1}}
-                className={"relative max-w-[25rem] h-[32rem] shadow-md bg-white group group-hover:shadow-2xl p-5 px-10 rounded-[5px]"}>
+                className={"relative max-w-[25rem] h-[34rem] shadow-md bg-white group group-hover:shadow-2xl p-5 px-10 rounded-[5px]"}>
                 <motion.div className="w-auto h-auto group cursor-pointer mx-auto">
                     <Image width={200} height={300} sizes={'max'} className="object-cover mx-auto"
                            src={ApiImage + image}
                            alt={''}/>
                 </motion.div>
-                <h1 className="text-[1.8rem] mt-5 group font-semibold text-left capitalize cursor-pointer">{name}</h1>
-                <div className="text-[1.6rem] font-medium">{transformCurrency(parseInt(price))}</div>
                 <div
-                    className="absolute cursor-pointer left-0 top-0 bg-primary text-secondary px-2 py-1 capitalize text-[1.6rem] rounded">{brand}</div>
+                    className="cursor-pointer capitalize text-[1.4rem] mb-[2px] mt-[5px] rounded">{brand}</div>
+                <h1 className="text-[1.8rem] group font-semibold text-left capitalize cursor-pointer">{name}</h1>
+                <div
+                    className="text-[1.6rem] font-medium">{transformCurrency(Math.floor((((1 - (sale / 100)) * parseInt(price))) / 1000) * 1000)}</div>
                 {sale !== 0 && (
                     <div
-                        className="absolute top-0 right-0 text-[1.4rem] font-semibold text-secondary px-2 py-1 rounded bg-red-500">
+                        className="absolute top-0 right-0 text-[1.4rem] font-semibold text-secondary px-2 py-1
+                         rounded bg-gradient-to-r from-orange-400 to-red-400">
                         {sale}%
                     </div>
+                )}
+                {views >= 1000 && (
+                    <div className="absolute top-0 left-0 text-[1.4rem] font-semibold
+                     text-secondary px-2 py-1 rounded bg-gradient-to-r from-cyan-500 to-blue-500">Hot</div>
                 )}
             </motion.div>
         </motion.div>
