@@ -19,6 +19,7 @@ function SectionSale() {
                 {!isProductsListLoading && productsList?.map((product, index) => (
                     <BoxProduct key={index} id={product.id_product} sale={product.sale_off}
                                 price={product.price.toString()} index={index} views={parseInt(product.views)}
+                                color={product.color} memory={product.memory}
                                 brand={product.brand_name} image={product.image} name={product.name}/>
                 ))}
             </div>

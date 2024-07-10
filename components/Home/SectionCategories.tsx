@@ -46,6 +46,7 @@ const SectionCategories = () => {
                 {productsList?.map((product, index) => (
                     <BoxProduct key={index} id={product.id_product} sale={product.sale_off}
                                 price={product.price.toString()} index={index} views={parseInt(product.views)}
+                                memory={product.memory} color={product.color}
                                 brand={product.brand_name} image={product.image} name={product.name}/>
                 ))}
             </div>

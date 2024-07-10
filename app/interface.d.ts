@@ -2,6 +2,7 @@ interface Brand {
     id_brand: string;
     name: string;
     description: string;
+    logo: string;
     status: number
 }
 
@@ -12,7 +13,9 @@ interface ProductBox {
     brand_name: string,
     price: number,
     sale_off: number,
-    views: string
+    views: string,
+    memory: string,
+    color: string
 }
 
 interface ProductDetail {

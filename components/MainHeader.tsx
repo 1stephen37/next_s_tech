@@ -87,7 +87,7 @@ function MainHeader() {
                             <input
                                 value={search}
                                 onChange={handleInputChange}
-                                onBlur={() => setTimeout(() => setShowSearchBox(false), 800)}
+                                onBlur={() => setTimeout(() => setShowSearchBox(false), 200)}
                                 onFocus={handleInputFocus}
                                 className="text-[1.6rem] pl-[1rem] border-[0.2px] border-solid border-primary pr-[2.5rem] rounded-[5px] w-[60rem] h-[5rem] outline-none"
                                 placeholder="Bạn đang tìm gì ?" type="text"/>
@@ -101,6 +101,9 @@ function MainHeader() {
                                         <BoxProductSearch name={product.name} image={product.image} sale={product.sale_off} price={product.price.toString()}
                                                           key={index} brand={product.brand_name} id={product.id_product} index={index} />
                                     ))}
+                                    {productsListSearch && productsListSearch.length <= 0 && (
+                                        <p className="text-2xl">Không tìm thấy sản phẩm phù hợp</p>
+                                    )}
                                 </div>
                             )}
                         </form>
