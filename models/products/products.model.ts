@@ -38,16 +38,21 @@ const ProductsModel = {
             }>(this.url + `?id_brand=${id_brand}&offset=${offset}&limit=${limit}&property=views&sort=desc`, FetchGet)
         return {trigger, isMutating};
     },
-    GetProductsLimitByPage(page: number, limit: number) {
+    GetProductsLimitByPage(page: number, limit: number, id_brand? : string) {
         const offset = (page - 1) * limit;
         const {data: products, error, isLoading}: {
-            data: { data: ProductBox[] },
+            data: {
+                data: ProductBox[], paging: {
+                    total: number
+                }
+            },
             error: Error | any,
             isLoading: boolean
         } =
-            useSWR(this.url + `?offset=${offset}&limit=${limit}`, FetchGet)
+            useSWR(this.url + `?offset=${offset}&limit=${limit}&page=${page}${id_brand !== '' ? `&id_brand=${id_brand}` : ''}`, FetchGet)
         return {
             data: products?.data,
+            paging: products?.paging,
             isLoading,
             isError: error
         }

@@ -4,6 +4,7 @@ import ProductsModel from "@/models/products/products.model";
 import {ApiImage} from "@/app/constants";
 import Heading from "@/components/sections/Heading";
 import Image from 'next/image';
+import {Button} from "@/components/ui/button";
 
 function Page({params}: { params: { id: string } }) {
     const {data, isLoading, isError} = ProductsModel.GetProductById(params.id);
@@ -42,6 +43,10 @@ function Page({params}: { params: { id: string } }) {
                         <div className="lg:w-1/2 w-full mt-6 lg:mt-0">
                             <h2 className="text-2xl title-font text-gray-600 tracking-widest capitalize">{data.brand_name}</h2>
                             <h1 className="text-gray-900 text-[2.4rem] title-font font-medium mb-1">{data?.name}</h1>
+                            <div className="flex gap-5">
+                                <Button size={'lg'} variant={'default'}>Mua ngay</Button>
+                                <Button variant={'secondary'} size={'lg'}>Thêm vào giỏ hàng</Button>
+                            </div>
                         </div>
                     </div>
                 </section>
