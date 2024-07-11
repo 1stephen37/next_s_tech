@@ -28,12 +28,12 @@ function BoxProductSearch({id, name, image, brand, price, sale, index}: Product)
             onClick={handleDetailProduct}
             whileHover={{scale: 1.05, boxShadow: '0.5px 0.5px 5px 2px rgba(0, 0, 0, 0.3)'}}
             transition={{duration: 0.1}}
-            className="flex items-center shadow-md group cursor-pointer px-3 py-3">
-            <div onClick={() => console.log(123)} className="">
-                <Image className={'object-cover'} alt={''} width={70} height={50} src={ApiImage + image}/>
+            className="flex items-center gap-5 shadow-md group cursor-pointer px-3 py-3">
+            <div className="">
+                <Image className={'object-contain'} alt={''} width={70} height={50} src={ApiImage + image}/>
             </div>
             <div className="">
-                <div onClick={() => console.log(123)} className="text-[1.4rem]">{name}</div>
+                <div className="text-[1.4rem]">{name.length > 20 ? name.slice(0,20) + '...' : name}</div>
                 <div
                     className="text-[1.2rem] ">{transformCurrency(Math.floor((((1 - (sale / 100)) * parseInt(price))) / 1000) * 1000)}</div>
             </div>

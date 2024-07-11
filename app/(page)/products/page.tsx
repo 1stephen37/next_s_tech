@@ -17,6 +17,7 @@ import Image from 'next/image';
 import {ApiImage} from "@/app/constants";
 import {cn} from "@/lib/utils";
 import {MdOutlineCancelPresentation} from "react-icons/md";
+import {useAppSelector} from "@/redux/hooks";
 
 const filterList = [
     {
@@ -30,6 +31,7 @@ const filterList = [
 const limit = 15;
 
 function Page() {
+    const search = useAppSelector((state) => state.search.searchContent);
     const [page, setPage] = useState(1);
     const {data: Brands, isLoading, isError} = BrandsModel.GetAllBrands();
     const [idBrand, setIdBrand] = useState('');
@@ -39,14 +41,25 @@ function Page() {
         paging
     } = ProductsModel.GetProductsLimitByPage(page, limit, idBrand);
     const [countPage, setCountPage] = useState(0);
+    const {
+        data: productsListSearch,
+        paging: searchPaging,
+        isLoading: isSearching
+    } = ProductsModel.GetProductsByKeywordAndPage(limit, page, search, idBrand);
 
+    console.log(searchPaging);
 
     useEffect(() => {
-        setCountPage(Math.ceil(paging?.total / limit));
-        console.log(countPage);
-    }, [paging?.total, idBrand, countPage]);
+        if (search) {
+            console.log(123);
+            setCountPage(Math.ceil(searchPaging?.total / limit));
+        } else {
+            setCountPage(Math.ceil(paging?.total / limit));
+        }
+    }, [paging?.total, searchPaging?.total, idBrand, countPage]);
 
     const handleSwitchBrand = (id_brand: string) => {
+        setPage(1);
         setIdBrand(id_brand);
     }
 
@@ -57,42 +70,97 @@ function Page() {
 
     return (
         <section className="container mt-[4rem]">
-            <Heading title={'Sản phẩm'} className={''}/>
+            {search !== '' ? (
+                <h1 className={" text-center text-[3.2rem] font-semibold"}>Kết quả tìm kiếm của từ khóa : {search}</h1>
+            ) : (
+                <Heading title={'Sản phẩm'} className={''}/>
+            )}
             <div className="flex flex-col gap-10 mt-[4rem]">
-                <div className="w-full h-max sticky top-0 flex flex-col gap-10 ">
-                    <div className="flex gap-10 items-center flex-wrap">
-                        <h3 className="text-[2rem] font-semibold min-w-[100px]">Thương hiệu: </h3>
-                        {Brands && Brands.map((brand, index) => (
-                            <div key={index} onClick={() => handleSwitchBrand(brand.id_brand)} className={cn(`relative shadow-md cursor-pointer border-solid rounded border-[.5px]
+                {search !== '' ? (
+                    <div className="w-full h-max flex flex-col gap-10 ">
+                        <div className="flex gap-10 items-center flex-wrap">
+                            <h3 className="text-[2rem] font-semibold min-w-[100px]">Thương hiệu: </h3>
+                            {Brands && Brands.map((brand, index) => (
+                                <div key={index} onClick={() => handleSwitchBrand(brand.id_brand)}
+                                     className={cn(`relative shadow-md cursor-pointer border-solid rounded border-[.5px]
                              border-gray-400 w-[150px] h-[35px] hover:border-orange-400 ${idBrand === brand.id_brand ? 'border-orange-400' : ''}`)}>
-                                <Image className={'object-contain'} alt={brand.name} src={ApiImage + brand.logo} fill
-                                       priority={true}/>
+                                    <Image className={'object-contain'} alt={brand.name}
+                                           src={ApiImage + brand.logo}
+                                           fill
+                                           priority={true}/>
+                                </div>
+                            ))}
+                            <div onClick={() => setIdBrand('')} className="">
+                                <MdOutlineCancelPresentation
+                                    className='text-[3rem] cursor-pointer select-none hover:opacity-60'/>
                             </div>
-                        ))}
-                        <div onClick={() => setIdBrand('')} className="">
-                            <MdOutlineCancelPresentation
-                                className='text-[3rem] cursor-pointer select-none hover:opacity-60'/>
+                        </div>
+                        <div className="flex gap-10 items-center">
+                            <h2 className="text-[2rem] font-bold">Bộ lọc :</h2>
+                            {filterList.map((filter, index) => (
+                                <div className={cn(`border border-solid border-primary text-[1.8rem] px-3 py-1 rounded
+                            `)} key={index}>{filter.filterName}</div>
+                            ))}
+                        </div>
+                        <div className="w-full grid grid-cols-5 gap-6">
+                            {isSearching && (
+                                <Skeleton className="w-[200px] h-[120px] rounded"/>
+                            )}
+                            {!isSearching && productsListSearch?.map((product, index) => (
+                                <BoxProduct key={index} id={product.id_product} sale={product.sale_off}
+                                            price={product.price.toString()} index={index}
+                                            memory={product.memory}
+                                            color={product.color} views={parseInt(product.views)}
+                                            brand={product.brand_name} image={product.image}
+                                            name={product.name}/>
+                            ))}
+                            {productsListSearch?.length <= 0 && (
+                                <h1 className='text-center col-span-5 text-3xl'>Không có sản phẩm phù hơp với từ khóa
+                                    của bạn</h1>
+                            )}
                         </div>
                     </div>
-                    <div className="flex gap-10 items-center">
-                        <h2 className="text-[2rem] font-bold">Bộ lọc :</h2>
-                        {filterList.map((filter, index) => (
-                            <div className={cn(`border border-solid border-primary text-[1.8rem] px-3 py-1 rounded
+                ) : (
+                    <div className="w-full h-max flex flex-col gap-10 ">
+                        <div className="flex gap-10 items-center flex-wrap">
+                            <h3 className="text-[2rem] font-semibold min-w-[100px]">Thương hiệu: </h3>
+                            {Brands && Brands.map((brand, index) => (
+                                <div key={index} onClick={() => handleSwitchBrand(brand.id_brand)}
+                                     className={cn(`relative shadow-md cursor-pointer border-solid rounded border-[.5px]
+                             border-gray-400 w-[150px] h-[35px] hover:border-orange-400 ${idBrand === brand.id_brand ? 'border-orange-400' : ''}`)}>
+                                    <Image className={'object-contain'} alt={brand.name}
+                                           src={ApiImage + brand.logo}
+                                           fill
+                                           priority={true}/>
+                                </div>
+                            ))}
+                            <div onClick={() => setIdBrand('')} className="">
+                                <MdOutlineCancelPresentation
+                                    className='text-[3rem] cursor-pointer select-none hover:opacity-60'/>
+                            </div>
+                        </div>
+                        <div className="flex gap-10 items-center">
+                            <h2 className="text-[2rem] font-bold">Bộ lọc :</h2>
+                            {filterList.map((filter, index) => (
+                                <div className={cn(`border border-solid border-primary text-[1.8rem] px-3 py-1 rounded
                             `)} key={index}>{filter.filterName}</div>
-                        ))}
+                            ))}
+                        </div>
+                        <div className="w-full grid grid-cols-5 gap-6">
+                            {isProductsListLoading && (
+                                <Skeleton className="w-[200px] h-[120px] rounded"/>
+                            )}
+                            {!isProductsListLoading && productsList?.map((product, index) => (
+                                <BoxProduct key={index} id={product.id_product} sale={product.sale_off}
+                                            price={product.price.toString()} index={index}
+                                            memory={product.memory}
+                                            color={product.color} views={parseInt(product.views)}
+                                            brand={product.brand_name} image={product.image}
+                                            name={product.name}/>
+                            ))}
+                        </div>
                     </div>
-                </div>
-                <div className="w-full grid grid-cols-5 gap-6">
-                    {isProductsListLoading && (
-                        <Skeleton className="w-[200px] h-[120px] rounded"/>
-                    )}
-                    {!isProductsListLoading && productsList?.map((product, index) => (
-                        <BoxProduct key={index} id={product.id_product} sale={product.sale_off}
-                                    price={product.price.toString()} index={index} memory={product.memory}
-                                    color={product.color} views={parseInt(product.views)}
-                                    brand={product.brand_name} image={product.image} name={product.name}/>
-                    ))}
-                </div>
+                )}
             </div>
             {countPage > 1 && (
                 <Pagination className="mt-[4rem]">
