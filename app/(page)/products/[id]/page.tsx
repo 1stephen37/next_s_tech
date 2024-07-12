@@ -94,7 +94,7 @@ function Page({params}: { params: { id: string } }) {
                                 <span className={'text-2xl'}>{data.views} lượt xem</span>
                             </p>
                             <s className="text-gray-900 block mt-3 text-[1.6rem] font-medium">{transformCurrency(parseInt(data.options[indexImage].price))}</s>
-                            <p className="text-[2.4rem] text-orange-500 font-medium">{transformCurrency(Math.floor((((1 - (data.sale_off / 100)) * parseInt(data.options[indexImage].price))) / 1000) * 1000)}</p>
+                            <p className="text-[2.4rem] text-orange-500 font-bold">{transformCurrency(Math.floor((((1 - (data.sale_off / 100)) * parseInt(data.options[indexImage].price))) / 1000) * 1000)}</p>
                             <div className="flex gap-5 mt-5 flex-wrap">
                                 {data.options.map((option, index) => (
                                     <div key={index} onClick={() => switchImage(index)}
