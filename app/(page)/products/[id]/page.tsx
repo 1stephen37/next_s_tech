@@ -10,10 +10,13 @@ import ZoomImage from "@/components/products/ZoomImage";
 import CommentSection from "@/components/products/CommentSection";
 import {ScrollArea} from "@/components/ui/scroll-area"
 import {FaRegEye} from "react-icons/fa";
+import DetailsFullComponents from "@/components/products/DetailsFullComponents";
 
 function Page({params}: { params: { id: string } }) {
+    const limitDetail = 3;
     const [mainImageSrc, setMainImageSrc] = useState('');
     const [indexImage, setIndexImage] = useState(0);
+    const [showDetail, setShowDetail] = useState(false);
     const [showZoom, setShowZoom] = useState(false);
     const {data, isLoading, isError} = ProductsModel.GetProductById(params.id);
 
@@ -27,6 +30,9 @@ function Page({params}: { params: { id: string } }) {
         setIndexImage(index);
         setMainImageSrc((ApiImage + data?.options[index].image));
     }
+
+    let options = new Set(data?.options.map((option) => option.memory));
+    console.log(options);
 
     if (isLoading) {
         return (
@@ -93,6 +99,13 @@ function Page({params}: { params: { id: string } }) {
                                 <FaRegEye className='text-3xl'/>
                                 <span className={'text-2xl'}>{data.views} lượt xem</span>
                             </p>
+                            <div className="flex gap-8 mt-5">
+                                {Array.from(options).map((option, index) => (
+                                    <div key={index}>
+                                        {option}
+                                    </div>
+                                ))}
+                            </div>
                             <s className="text-gray-900 block mt-3 text-[1.6rem] font-medium">{transformCurrency(parseInt(data.options[indexImage].price))}</s>
                             <p className="text-[2.4rem] text-orange-500 font-bold">{transformCurrency(Math.floor((((1 - (data.sale_off / 100)) * parseInt(data.options[indexImage].price))) / 1000) * 1000)}</p>
                             <div className="flex gap-5 mt-5 flex-wrap">
@@ -115,228 +128,48 @@ function Page({params}: { params: { id: string } }) {
                                     </div>
                                 ))}
                             </div>
-                            <p className="mt-5 text-2xl text-gray-600">{data.detail.description}</p>
                             <div className="flex gap-5 mt-5">
                                 <Button size={'lg'} variant={'default'}>Mua ngay</Button>
                                 <Button variant={'secondary'} size={'lg'}>Thêm vào giỏ hàng</Button>
                             </div>
                         </div>
                     </section>
-                    <section className="mt-[4rem]">
-                        <h1 className="heading mb-1">Thông số kĩ thuật</h1>
-                        <div
-                            className="grid grid-cols-3 border border-gray-500 border-solid p-5 rounded-xl mt-5 text-2xl">
-                            <div className="flex flex-col gap-10">
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">Màn hình</h1>
-                                    <div className="mt-5 ml-5 grid grid-cols-2 gap-x-0">
-                                        <div className="w-max flex flex-col gap-5">
-                                            <div className="">Kích thước màn hình</div>
-                                            <div className="">Công nghệ màn hình</div>
-                                            <div className=""> Độ phân giải màn hình</div>
-                                            <div className="">Tính năng màn hình</div>
-                                            <div className="">Tần số quét</div>
-                                            <div className="">Kiểu màn hình</div>
-                                        </div>
-                                        <div className="w-max flex flex-col gap-5">
-                                            <div className="">{data.detail.screen_size}</div>
-                                            <div className="">{data.detail.screen_technology}</div>
-                                            <div className="">{data.detail.resolution}</div>
-                                            <div className="">{data.detail.screen_feature}</div>
-                                            <div className="">{data.detail.refresh_rate}</div>
-                                            <div className="">{data.detail.screen_type}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">Camera sau</h1>
-                                    <div className="mt-5 ml-5">
-                                        <div className="h-max flex flex-col gap-5">
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Camera sau</div>
-                                                <div className="w-[17rem]">{data.detail.rear_camera}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Quay video</div>
-                                                <div className="w-[17rem]">{data.detail.rear_video}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Tính năng camera</div>
-                                                <div className="w-[17rem]">{data.detail.camera_features}</div>
-                                            </div>
+                    <section className="mt-[4rem] flex justify-between">
+                        <CommentSection idProduct={data.id_product}/>
+                        <div className="w-[30%]">
+                            <h1 className="heading mb-1">Thông số kĩ thuật</h1>
+                            <div
+                                className="grid grid-cols-1 gap-y-10 border border-gray-500 border-solid p-5 rounded-xl mt-5 text-2xl">
+                                {data.details.map((details, index) => (
+                                    <div key={index} className="flex flex-col gap-5">
+                                        <h1 className="font-medium text-[2rem]">{details.name}</h1>
+                                        <div className="grid grid-cols-1 gap-y-5">
+                                            {details.detail.map((detail, index) => {
+                                                if (limitDetail >= index) {
+                                                    return (
+                                                        <div key={index} className="flex justify-between">
+                                                            <div className={`w-max min-w-[60%] py-2 
+                                                                px-5 rounded-md ` + `${index / 2 !== 0 ? "" :
+                                                                "bg-gray-100"}`}>{detail.name}</div>
+                                                            <div className={`w-max min-w-[40%] py-2
+                                                                 px-5 rounded-md ` + `${index / 2 !== 0 ? "" :
+                                                                "bg-gray-100"}`}>{detail.value}</div>
+                                                        </div>
+                                                    )
+                                                }
+                                            })}
                                         </div>
                                     </div>
-                                </div>
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">Camera trước</h1>
-                                    <div className="mt-5 ml-5">
-                                        <div className="h-max flex flex-col gap-5">
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Camera trước</div>
-                                                <div className="w-[17rem]">{data.detail.front_camera}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Quay video trước</div>
-                                                <div className="w-[17rem]">{data.detail.front_media}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
-                            <div className="flex flex-col gap-10">
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">Vi xử lý & đồ họa</h1>
-                                    <div className="mt-5 ml-5 grid grid-cols-2 gap-x-0">
-                                        <div className="w-max flex flex-col gap-5">
-                                            <div className="">Chipset</div>
-                                            <div className="">Loại CPU</div>
-                                            <div className="">GPU</div>
-                                        </div>
-                                        <div className="w-max flex flex-col gap-5">
-                                            <div className="">{data.detail.chipset}</div>
-                                            <div className="">{data.detail.cpu}</div>
-                                            <div className="">{data.detail.gpu}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">Giao tiếp & kết nối</h1>
-                                    <div className="mt-5 ml-5">
-                                        <div className="h-max flex flex-col gap-5">
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Công nghệ NFC</div>
-                                                <div className="w-[17rem]">{data.detail.nfc ? 'có' : 'không'}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Thẻ SIM</div>
-                                                <div className="w-[17rem]">{data.detail.sim}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Hệ điều hành</div>
-                                                <div className="w-[17rem]">{data.detail.os}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Hỗ trợ mạng</div>
-                                                <div className="w-[17rem]">{data.detail.network_support}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Wi-Fi</div>
-                                                <div className="w-[17rem]">{data.detail.wifi}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Bluetooth</div>
-                                                <div className="w-[17rem]">{data.detail.bluetooth}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">GPS</div>
-                                                <div className="w-[17rem]">{data.detail.gps}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">RAM & lưu trữ</h1>
-                                    <div className="mt-5 ml-5">
-                                        <div className="h-max flex flex-col gap-5">
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Dung lượng RAM</div>
-                                                <div
-                                                    className="w-[17rem]">{data.options[indexImage].memory.split('/')[0]}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Bộ nhớ trong</div>
-                                                <div
-                                                    className="w-[17rem]">{data.options[indexImage].memory.split('/')[1]}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Khe cắm thẻ nhớ</div>
-                                                <div
-                                                    className="w-[17rem]">{data.detail.memory_card_slot}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">Pin & công nghệ sạc</h1>
-                                    <div className="mt-5 ml-5">
-                                        <div className="h-max flex flex-col gap-5">
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Pin</div>
-                                                <div
-                                                    className="w-[17rem]">{data.detail.battery}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Công nghệ sạc</div>
-                                                <div
-                                                    className="w-[17rem]">{data.detail.charging_technology}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Cổng sạc</div>
-                                                <div
-                                                    className="w-[17rem]">{data.detail.charging_port}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex flex-col gap-10">
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">Thiết kế & Trọng lượng</h1>
-                                    <div className="mt-5 ml-5 grid grid-cols-2 gap-x-0">
-                                        <div className="w-max flex flex-col gap-5">
-                                            <div className="">Kích thước</div>
-                                            <div className="">Trọng lượng</div>
-                                            <div className="">Chất liệu mặt lưng</div>
-                                            <div className="">Chất liệu khung viềnt</div>
-                                        </div>
-                                        <div className="w-max flex flex-col gap-5">
-                                            <div className="">{data.detail.size}</div>
-                                            <div className="">{data.detail.weight} g</div>
-                                            <div className="">{data.detail.back_material}</div>
-                                            <div className="">{data.detail.frame_material}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">Thông số khác</h1>
-                                    <div className="mt-5 ml-5">
-                                        <div className="h-max flex flex-col gap-5">
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Chỉ số kháng nước, bụi</div>
-                                                <div className="w-[17rem]">{data.detail.ingress_protection}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Cảm biến</div>
-                                                <div className="w-[17rem]">{data.detail.technology_utilities}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Tính năng camera</div>
-                                                <div className="w-[17rem]">{data.detail.camera_features}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-[80%] h-max">
-                                    <h1 className="font-medium text-[2rem]">Tiện ích khác</h1>
-                                    <div className="mt-5 ml-5">
-                                        <div className="h-max flex flex-col gap-5">
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Các loại cảm biến</div>
-                                                <div className="w-[17rem]">{data.detail.types_of_sensors}</div>
-                                            </div>
-                                            <div className="flex gap-0 w-full">
-                                                <div className="w-[17rem]">Tính năng đặc biệt</div>
-                                                <div className="w-[17rem]">{data.detail.special_features}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <Button onClick={() => setShowDetail(true)} variant={'secondary'}
+                                    className="mt-5 w-full py-7 rounded text-3xl">Xem cấu hình chi
+                                tiết</Button>
                         </div>
                     </section>
-                    <CommentSection/>
                 </section>
                 <ZoomImage imageSrc={mainImageSrc} showZoomImage={showZoom} setShowZoomImage={setShowZoom}/>
+                <DetailsFullComponents showDetails={showDetail} setShowDetails={setShowDetail} details={data.details}/>
             </>
         );
     }

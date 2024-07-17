@@ -5,6 +5,7 @@ export const tableName = {
     brands: 'brands',
     users: 'users',
     products: 'products',
+    reviews: 'reviews',
 }
 
 export const FetchGet = (url: string) => fetch(url, {
