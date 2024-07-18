@@ -9,6 +9,7 @@ import {FaHome} from "react-icons/fa";
 import {usePathname} from "next/navigation";
 import {TbCategory, TbTruckDelivery} from "react-icons/tb";
 import {LuPackage} from "react-icons/lu";
+import {IoMdSettings} from "react-icons/io";
 import {
     Home,
     LineChart,
@@ -36,6 +37,8 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import {FaBox} from 'react-icons/fa';
+import {FaComment} from "react-icons/fa";
 
 const links = [
     {
@@ -59,9 +62,29 @@ const links = [
         icon: <TbTruckDelivery/>
     },
     {
+        href: "/dashboard/reviews",
+        name: "Cảm nghĩ",
+        icon: <FaComment />
+    },
+    {
+        href: "/dashboard/deliveries",
+        name: "vận chuyển",
+        icon: <TbTruckDelivery/>
+    },
+    {
+        href: "/dashboard/deliveries",
+        name: "vận chuyển",
+        icon: <TbTruckDelivery/>
+    },
+    {
+        href: "/dashboard/deliveries",
+        name: "vận chuyển",
+        icon: <TbTruckDelivery/>
+    },
+    {
         href: "/dashboard/orders",
         name: "đơn hàng",
-        icon: <BiSolidCategory/>
+        icon: <FaBox/>
     }
 ]
 
@@ -87,6 +110,12 @@ function Layout({children}: { children: React.ReactElement }) {
                         ))}
                     </div>
                 </ScrollArea>
+                <div className="">
+                    <div className="">
+                        <IoMdSettings/>
+                        <div className="">Cài đặt</div>
+                    </div>
+                </div>
             </div>
             <div className="flex flex-col flex-1">
                 <header
@@ -152,13 +181,13 @@ function Layout({children}: { children: React.ReactElement }) {
                                     <Link className="text-3xl" href="/dashboard">Trang quản trị</Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
+                            {path !== '/dashboard' && (
+                                <BreadcrumbSeparator/>
+                            )}
                             <BreadcrumbItem>
                                 {path !== '/dashboard' && (
-                                    <>
-                                        <BreadcrumbSeparator/>
-                                        <BreadcrumbPage
-                                            className="text-3xl cursor-pointer">{links.filter(link => link.href === path)[0].name}</BreadcrumbPage>
-                                    </>
+                                    <BreadcrumbPage
+                                        className="text-3xl capitalize cursor-pointer">{links.filter(link => link.href === path)[0].name}</BreadcrumbPage>
                                 )}
                             </BreadcrumbItem>
                         </BreadcrumbList>
@@ -197,7 +226,7 @@ function Layout({children}: { children: React.ReactElement }) {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </header>
-                <main className="sm:px-6 sm:py-0 md:gap-8">
+                <main className="">
                     {children}
                 </main>
             </div>

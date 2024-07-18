@@ -24,8 +24,18 @@ function SectionSale() {
                 ))}
             </div>
             {limit < 10 && (
-                <Button variant={'link'} size={'lg'} className="py-5 mt-10 mx-auto"
-                        onClick={() => setTimeout(() => setLimit(10), 300)}>Tải thêm</Button>
+                <Button variant={'link'} size={'lg'} className="py-5 mt-5 mx-auto"
+                        onClick={() => setTimeout(() => {
+                            setLimit(10);
+                            window.scrollTo(0, 660);
+                        }, 300)}>Tải thêm</Button>
+            )}
+            {limit >= 10 && (
+                <Button variant={'link'} size={'lg'} className="py-5 mt-5 mx-auto"
+                        onClick={() => setTimeout(() => {
+                            setLimit(5);
+                            window.scrollTo(0, 600);
+                        }, 300)}>Ẩn bớt</Button>
             )}
         </section>
     );

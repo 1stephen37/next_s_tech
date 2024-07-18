@@ -1,62 +1,78 @@
-import React from 'react';
+'use client';
+import React, {useState} from "react";
 
-const CartPage = () => {
+interface Phone {
+    id: number;
+    name: string;
+    price: number;
+    brand: string;
+    color: string;
+    quantity: number;
+}
+
+const Cart: React.FC = () => {
+    const [cartItems, setCartItems] = useState<Phone[]>([
+        {id: 1, name: "iPhone 12", price: 999, brand: "Apple", color: "Black", quantity: 1},
+        {id: 2, name: "Galaxy S21", price: 899, brand: "Samsung", color: "White", quantity: 1},
+    ]);
+
+    const getTotalPrice = () => {
+        return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    };
+
+    const handleQuantityChange = (index: number, quantity: number) => {
+        const updatedCartItems = [...cartItems];
+        updatedCartItems[index] = {...updatedCartItems[index], quantity};
+        setCartItems(updatedCartItems);
+    };
+
     return (
-        <section className="container mt-[4rem]">
-            <div className="bg-white shadow-lg rounded-xl p-8 max-w-2xl mx-auto">
-                <h2 className="text-3xl font-bold mb-6">Giỏ hàng</h2>
-                <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-6">
-                            <img src="https://via.placeholder.com/100x100" alt="Sản phẩm"
-                                 className="w-24 h-24 object-cover rounded-lg"/>
+        <div className="container mx-auto mt-8">
+            <h2 className="text-3xl font-semibold">Giỏ hàng của bạn</h2>
+            <div className="grid grid-cols-1 gap-4 mt-6">
+                {cartItems.map((phone, index) => (
+                    <div key={phone.id} className="p-4 bg-white shadow-md rounded-lg">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <img
+                                    className="h-16 w-16 object-cover rounded"
+                                    src={`https://via.placeholder.com/150/${phone.color}`}
+                                    alt={phone.name}
+                                />
+                                <div className="ml-4">
+                                    <h3 className="text-lg font-semibold">{phone.name}</h3>
+                                    <p className="text-gray-500">{phone.brand} - {phone.color}</p>
+                                    <p className="text-gray-500">${phone.price} x {phone.quantity}</p>
+                                    <p className="text-gray-500">Tổng: ${phone.price * phone.quantity}</p>
+                                </div>
+                            </div>
                             <div>
-                                <h3 className="text-xl font-bold">Sản phẩm 1</h3>
-                                <p className="text-gray-500">12.000.000 VND</p>
+                                <button
+                                    className="px-2 py-1 bg-gray-200 rounded"
+                                    onClick={() => handleQuantityChange(index, phone.quantity - 1)}
+                                >
+                                    -
+                                </button>
+                                <span className="mx-2">{phone.quantity}</span>
+                                <button
+                                    className="px-2 py-1 bg-gray-200 rounded"
+                                    onClick={() => handleQuantityChange(index, phone.quantity + 1)}
+                                >
+                                    +
+                                </button>
                             </div>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <button
-                                className="bg-gray-200 hover:bg-gray-300 rounded-full w-10 h-10 flex items-center justify-center">-
-                            </button>
-                            <span className="text-lg font-medium">1</span>
-                            <button
-                                className="bg-gray-200 hover:bg-gray-300 rounded-full w-10 h-10 flex items-center justify-center">+
-                            </button>
-                        </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-6">
-                            <img src="https://via.placeholder.com/100x100" alt="Sản phẩm"
-                                 className="w-24 h-24 object-cover rounded-lg"/>
-                            <div>
-                                <h3 className="text-xl font-bold">Sản phẩm 2</h3>
-                                <p className="text-gray-500">8.000.000 VND</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <button
-                                className="bg-gray-200 hover:bg-gray-300 rounded-full w-10 h-10 flex items-center justify-center">-
-                            </button>
-                            <span className="text-lg font-medium">2</span>
-                            <button
-                                className="bg-gray-200 hover:bg-gray-300 rounded-full w-10 h-10 flex items-center justify-center">+
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="border-t pt-6 mt-6">
-                    <div className="flex items-center justify-between">
-                        <p className="text-xl font-bold">Tổng cộng:</p>
-                        <p className="text-2xl font-bold text-red-500">20.000.000 VND</p>
-                    </div>
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-lg w-full mt-6">
-                        Thanh toán
+                ))}
+                <div className="p-4 bg-white shadow-md rounded-lg">
+                    <h3 className="text-lg font-semibold">Tổng giá trị đơn hàng: ${getTotalPrice()}</h3>
+                    <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Thanh
+                        toán
                     </button>
                 </div>
             </div>
-        </section>
+        </div>
     );
 };
 
-export default CartPage;
+export default Cart;

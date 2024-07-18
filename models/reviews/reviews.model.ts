@@ -1,5 +1,6 @@
-import {ApiUrl, FetchGet, tableName} from "@/app/constants";
+import {ApiUrl, FetchGet, FetchPost, tableName} from "@/app/constants";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 
 
 const reviewsModel = {
@@ -13,6 +14,10 @@ const reviewsModel = {
             isError: error
         }
     },
+    CreateNewRepComment() {
+        const {trigger, isMutating, error} = useSWRMutation(this.url + '/reply/add', FetchPost)
+        return {trigger, isMutating, error}
+    }
 }
 
 export default reviewsModel

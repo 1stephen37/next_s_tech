@@ -14,7 +14,6 @@ function Page() {
             <Hero/>
             <Brands />
             <SectionSale/>
-            <About/>
             <SectionCategories/>
             <News/>
             <Reviews/>
