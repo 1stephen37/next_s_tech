@@ -14,8 +14,18 @@ const UsersModel = {
         }
     },
     UserSignIn() {
-        const {trigger, isMutating} = useSWRMutation(this.url + '/sign-in', FetchPost)
-        return {trigger, isMutating};
+        const {trigger, isMutating, error} = useSWRMutation(this.url + '/sign-in', FetchPost, {
+            onError: (err) => {
+                if (err.status === 401) {
+                    console.error('Incorrect username or password:', err);
+                } else if (err.status === 404) {
+                    console.error('Server returned a 404 error:', err);
+                } else {
+                    console.error('An error occurred:', err);
+                }
+            }
+        })
+        return {trigger, isMutating, error};
     },
     UserSignUp() {
         const {trigger, isMutating, error} = useSWRMutation(this.url + '/sign-up', FetchPost)

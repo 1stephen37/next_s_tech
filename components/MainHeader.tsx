@@ -18,34 +18,45 @@ import {
 } from "@/components/ui/navigation-menu"
 import {useAppSelector, useAppDispatch} from '@/redux/hooks'
 import {searchChange} from "@/redux/reducers/search.reducer";
+import {getInitialFromLocalStorage} from '@/redux/reducers/user.reducer'
 import {useRouter} from 'next/navigation';
 import ProductsModel from "@/models/products/products.model";
 import BoxProductSearch from "@/components/BoxProductSearch";
-import Image from "next/image";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {MdSpaceDashboard} from "react-icons/md";
+import {ImProfile} from "react-icons/im";
+import {MdLogout} from "react-icons/md";
 
 const imagesBrands = [
     {
-        name: 'iphone logo',
+        name: 'iphone',
         src: 'iphoneBrands.png'
     },
     {
-        name: 'samsung logo',
+        name: 'samsung',
         src: 'samsung-logo.png'
     },
     {
-        name: 'xiaomi logo',
+        name: 'xiaomi',
         src: 'xiaomiLogo.png'
     },
     {
-        name: 'oppo logo',
+        name: 'oppo',
         src: 'oppo-brand-logo.png'
     },
     {
-        name: 'realme logo',
+        name: 'realme',
         src: 'realmeLogo.png'
     },
     {
-        name: 'vivo logo',
+        name: 'vivo',
         src: 'Vivo-Logo.png'
     },
 
@@ -70,6 +81,7 @@ const links = [
 ]
 
 function MainHeader() {
+    const dispatch = useAppDispatch()
     const router = useRouter();
     const [showSearchBox, setShowSearchBox] = useState(false);
     const [header, setHeader] = useState(false);
@@ -82,8 +94,12 @@ function MainHeader() {
     }, []);
     const path = usePathname();
     const search = useAppSelector((state) => state.search.searchContent);
+    const isLogin = useAppSelector((state) => state.user.isLogin);
+    const userInformation = useAppSelector((state) => state.user.user);
+    useEffect(() => {
+        dispatch(getInitialFromLocalStorage());
+    }, []);
     const {data: productsListSearch, isLoading: isSearching} = ProductsModel.GetProductsByKeyword(4, search);
-    const dispatch = useAppDispatch()
     const handleSearchSubmit: FormEventHandler<HTMLFormElement> = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         router.push(`/products?search=${search}`);
@@ -117,8 +133,9 @@ function MainHeader() {
                         <NavigationMenu>
                             <NavigationMenuList>
                                 <NavigationMenuItem>
-                                    <NavigationMenuTrigger className={'text-[2rem] bg-none'}>Danh
-                                        Mục</NavigationMenuTrigger>
+                                    <NavigationMenuTrigger className={'text-[2rem] bg-none'}>
+                                        Danh Mục
+                                    </NavigationMenuTrigger>
                                     <NavigationMenuContent
                                         className="flex gap-5 py-5 px-5 lg:w-max lg:max-w-[62rem] flex-col">
                                         <NavigationMenuLink asChild>
@@ -174,7 +191,7 @@ function MainHeader() {
                             <input
                                 value={search}
                                 onChange={handleInputChange}
-                                onBlur={() => setTimeout(() => setShowSearchBox(false), 200)}
+                                onBlur={() => setTimeout(() => setShowSearchBox(false), 250)}
                                 onFocus={handleInputFocus}
                                 className="text-[1.6rem] pl-[1rem] border-[0.2px] border-solid border-primary pr-[2.5rem] rounded-[5px] w-[60rem] h-[5rem] outline-none"
                                 placeholder="Bạn đang tìm gì ?" type="text"/>
@@ -205,15 +222,58 @@ function MainHeader() {
                         {/*        </div>*/}
                         {/*    </SheetTrigger>*/}
                         {/*    <SheetContent className="h-[8rem]" side={'top'}>*/}
-
                         {/*    </SheetContent>*/}
                         {/*</Sheet>*/}
                     </div>
                     <div className="flex gap-5 items-center">
-                        <Link href={'/sign-in'} className="flex gap-3 items-center">
-                            <FaRegUser className="text-[2rem] cursor-pointer"/>
-                            <span className="text-[2rem]">Tài khoản</span>
-                        </Link>
+                        {isLogin && userInformation ? (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger
+                                    className="text-[2rem] flex gap-5 items-center outline-none capitalize">
+                                    {userInformation.name}
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className='w-max'>
+                                    <DropdownMenuLabel className={'text-3xl'}>Tài khoản</DropdownMenuLabel>
+                                    <DropdownMenuSeparator/>
+                                    <DropdownMenuItem className={'text-2xl'}>
+                                        <Link href={'/profile'} className={'flex gap-5 '}>
+                                            <ImProfile className={'text-2xl'}/>
+                                            <div className="">
+                                                Trang hồ sơ
+                                            </div>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    {userInformation.role === 0 ? (
+                                        <>
+                                            <DropdownMenuItem className={'text-2xl'}>
+                                                <Link href={'/profile'}>Lịch sử mua hàng</Link>
+                                            </DropdownMenuItem>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <DropdownMenuItem className={'text-2xl '}>
+                                                <Link href={'/dashboard'} className={'flex gap-5'}>
+                                                    <MdSpaceDashboard className={'text-2xl'}/>
+                                                    <div>Trang quản trị</div>
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        </>
+                                    )}
+                                    <DropdownMenuItem className={'text-2xl flex gap-5'}>
+                                        <MdLogout className={'text-2xl'}/>
+                                        <div className="">
+                                            Đăng xuất
+                                        </div>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+
+                        ) : (
+                            <Link href={'/sign-in'} className="flex gap-3 items-center">
+                                <FaRegUser className="text-[2rem] cursor-pointer"/>
+                                <span className="text-[2rem]">Tài khoản</span>
+                            </Link>
+                        )}
                         <Link href="/cart" className="flex gap-3 items-center">
                             <LuShoppingCart className="text-[2rem] cursor-pointer"/>
                             <span className="text-[2rem]">Giỏ hàng</span>

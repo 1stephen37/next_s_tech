@@ -14,7 +14,7 @@ function DetailsFullComponents({showDetails, setShowDetails, details}: {
         }[]
     }[],
 }) {
-    if (showDetails) {
+    if (showDetails && details.length > 0) {
         return (
             <div onClick={() => setShowDetails(false)}
                  className="fixed inset-0 backdrop-blur-sm z-50 bg-[rgba(0,0,0,0.7)] grid place-items-center">

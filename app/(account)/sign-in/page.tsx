@@ -22,26 +22,33 @@ type Inputs = {
 };
 
 function Page() {
+    const [errorMessage, setErrorMessage] = useState('');
     const [showAlert, setShowAlert] = useState(false);
-    const [handleRouting, setHandleRouting] = useState<() => void | undefined>(() => {
-    });
     const router = useRouter()
-    const {trigger, isMutating} = UsersModel.UserSignIn();
-
+    const {trigger, isMutating, error} = UsersModel.UserSignIn();
     const {register, handleSubmit, formState: {errors}}
         = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = async (formData) => {
         await trigger(formData)
             .then(data => {
-                let user = data.data;
-                localStorage.setItem("user", JSON.stringify(user))
-                localStorage.setItem("isLogin", "true");
-                setShowAlert(true);
-                setTimeout(() => {
-                    if (user.role === 1) setHandleRouting(() => router.push('/dashboard'));
-                    else setHandleRouting(() => router.push('/'));
-                }, 1500)
+                if (data.message) {
+                    setErrorMessage(data.message);
+                    console.log(data.message);
+                } else {
+                    let user = data.data as User;
+                    localStorage.setItem("user", JSON.stringify(user))
+                    localStorage.setItem("isLogin", "true");
+                    setShowAlert(true);
+                    setTimeout(() => {
+                        if (user.role === 1 && !showAlert) {
+                            router.push('/dashboard')
+                        } else if (user.role === 0 && !showAlert) {
+                            router.push('/')
+                        }
+                    }, 2000)
+                }
             })
+
     };
 
     const [showPassword, setShowPassword] = useState(false);
@@ -77,9 +84,9 @@ function Page() {
                                     className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                 />
                                 {errors.email && <span
-                                    className="text-[1.4rem] pl-1 text-destructive font-medium">{errors.email.message}</span>}
+                                    className="text-[1.5rem] pl-1 text-destructive font-medium">{errors.email.message}</span>}
                             </div>
-                            <div className="grid gap-5 relative">
+                            <div className="grid gap-5 ">
                                 <div className="flex items-center">
                                     <Label htmlFor="password" className="text-[2rem]">Mật khẩu</Label>
                                     <Link href="/forget-password"
@@ -87,33 +94,37 @@ function Page() {
                                         Quên mật khẩu ?
                                     </Link>
                                 </div>
-                                <Input id="password" type={showPassword ? 'text' : 'password'}
-                                       {...register("password", {
-                                           required: "Bạn phải nhập mật khẩu",
-                                           minLength: {
-                                               value: 8,
-                                               message: "Mật khẩu phải có ít nhất 8 kí tự"
-                                           },
-                                           validate: (value) => {
-                                               if (!(/^(?=.*[A-Z])(?=.*[!@#$%^&*_+/])(?=.*[0-9]).{8,}$/.test(value))) {
-                                                   return "Mật khẩu phải có số, chữ cái in hoa và kí tự đặc biệt"
+                                <div className="relative">
+                                    <Input id="password" type={showPassword ? 'text' : 'password'}
+                                           {...register("password", {
+                                               required: "Bạn phải nhập mật khẩu",
+                                               minLength: {
+                                                   value: 8,
+                                                   message: "Mật khẩu phải có ít nhất 8 kí tự"
+                                               },
+                                               validate: (value) => {
+                                                   if (!(/^(?=.*[A-Z])(?=.*[!@#$%^&*_+/])(?=.*[0-9]).{8,}$/.test(value))) {
+                                                       return "Mật khẩu phải có số, chữ cái in hoa và kí tự đặc biệt"
+                                                   }
+                                                   return true;
                                                }
-                                               return true;
-                                           }
-                                       })}
-                                       placeholder="Nhập mật khẩu của bạn"
-                                       className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
-                                />
-                                <div onClick={() => setShowPassword(!showPassword)}
-                                     className={`absolute group right-5 text-[2rem] cursor-pointer select-none ${!errors.password ? "bottom-[0.8rem]" : "bottom-[4.2rem]"}`}>
-                                    {showPassword ? (
-                                        <FaRegEye/>
-                                    ) : (
-                                        <FaRegEyeSlash/>
-                                    )}
+                                           })}
+                                           placeholder="Nhập mật khẩu của bạn"
+                                           className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
+                                    />
+                                    <div onClick={() => setShowPassword(!showPassword)}
+                                         className={`absolute group right-5 text-[2rem] cursor-pointer select-none bottom-[0.8rem]`}>
+                                        {showPassword ? (
+                                            <FaRegEye/>
+                                        ) : (
+                                            <FaRegEyeSlash/>
+                                        )}
+                                    </div>
                                 </div>
                                 {errors.password && <span
-                                    className="text-[1.4rem] pl-1 text-destructive font-medium">{errors.password.message}</span>}
+                                    className="text-[1.5rem] pl-1 text-destructive font-medium">{errors.password.message}</span>}
+                                {errorMessage && <span
+                                    className="text-[1.6rem] text-center text-destructive font-medium">{errorMessage}</span>}
                             </div>
                             <div className="grid gap-5">
                                 <Button type="submit" className="w-full mx-auto py-10">
@@ -133,7 +144,7 @@ function Page() {
                     </CardContent>
                 </Card>
             </section>
-            <Alert showAlert={showAlert} setShowAlert={setShowAlert} callBack={handleRouting}
+            <Alert showAlert={showAlert} setShowAlert={setShowAlert}
                    subMessage={'Bạn đã đăng nhập vào hệ thống của STECH bằng tài khoản và mật khẩu, bạn sẽ được hưởng các ưu đãi đặc biệt dành cho thành viên của chúng tôi.'}
                    message={'Đăng nhập thành công'}/>
         </>

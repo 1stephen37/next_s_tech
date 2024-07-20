@@ -6,12 +6,11 @@ const searchReducer = createSlice({
         searchContent: ''
     },
     reducers: {
-        searchChange : (state, action) => {
+        searchChange: (state, action) => {
             state.searchContent = action.payload;
         }
     }
 })
 
-export const { searchChange } = searchReducer.actions
+export const {searchChange} = searchReducer.actions
 export default searchReducer.reducer
-// export default searchReducer;

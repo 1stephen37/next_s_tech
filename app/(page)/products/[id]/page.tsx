@@ -12,6 +12,7 @@ import {ScrollArea} from "@/components/ui/scroll-area"
 import {FaRegEye} from "react-icons/fa";
 import DetailsFullComponents from "@/components/products/DetailsFullComponents";
 import {AiOutlineShoppingCart} from 'react-icons/ai';
+import {useAppSelector} from "@/redux/hooks";
 
 function Page({params}: { params: { id: string } }) {
     const limitDetail = 1;
@@ -24,6 +25,10 @@ function Page({params}: { params: { id: string } }) {
     const [showDetail, setShowDetail] = useState(false);
     const [showZoom, setShowZoom] = useState(false);
     const {data, isLoading, isError} = ProductsModel.GetProductById(params.id);
+    const cart = useAppSelector((state) => state.cart.cart);
+
+    console.log(cart);
+    // console.log(data);
 
     useEffect(() => {
         setMainImageSrc((ApiImage + data?.options[indexImage].image));
@@ -41,7 +46,17 @@ function Page({params}: { params: { id: string } }) {
 
 
     const handleAddCart = () => {
-
+        if (cart.length > 0) {
+            console.log('đã có giỏ hàng')
+        } else {
+            const cartItem = {
+                id_product: data?.id_product,
+                // image: data?.image,
+            }
+            console.log(123);
+            console.log(cartItem)
+            console.log('chưa có giỏ hàng')
+        }
     }
 
     const handleByNow = () => {
@@ -52,11 +67,11 @@ function Page({params}: { params: { id: string } }) {
         setIndexColor(index);
         setPriceNow(transformCurrency(Math.floor((((1 - (data?.sale_off / 100)) * parseInt(data?.options[index].price))) / 1000) * 1000));
         setPriceSale(transformCurrency(parseInt(data?.options[index].price.toString())));
-        // let indexImage = data?.options.findIndex((option) =>
-        //     option.color === data?.options[index].color) | 0;
-        // console.log(indexImage)
+        let indexImage = data?.options.findIndex((option) =>
+            option.color === colors[index].color) || 0;
+        console.log(indexImage);
+        setMainImageSrc((ApiImage + data?.options[indexImage].image));
         // setIndexImage(indexImage);
-        // setMainImageSrc((ApiImage + data?.options[indexImage].image));
     }
 
     if (isLoading) {
@@ -159,7 +174,8 @@ function Page({params}: { params: { id: string } }) {
                             </div>
                             <div className="flex gap-5 mt-5">
                                 <Button size={'lg'} variant={'default'}>Mua ngay</Button>
-                                <Button variant={'secondary'} className={'flex gap-3'} size={'lg'}>
+                                <Button onClick={handleAddCart} variant={'secondary'} className={'flex gap-3'}
+                                        size={'lg'}>
                                     <AiOutlineShoppingCart/>
                                     <span className={'text-2xl'}>Thêm vào giỏ hàng</span>
                                 </Button>
@@ -172,7 +188,7 @@ function Page({params}: { params: { id: string } }) {
                             <h1 className="heading mb-1">Thông số kĩ thuật</h1>
                             <div
                                 className="grid grid-cols-1 gap-y-10 border border-gray-500 border-solid p-5 rounded-xl mt-5 text-2xl">
-                                {data.details.map((details, index) => (
+                                {data.details?.map((details, index) => (
                                     <div key={index} className="flex flex-col gap-5">
                                         <h1 className="font-medium text-[2rem]">{details.name}</h1>
                                         <div className="grid grid-cols-1 gap-y-5">

@@ -1,11 +1,10 @@
 import React from 'react';
 import {Button} from "@/components/ui/button";
 
-function Alert({showAlert, setShowAlert, message, callBack = () => setShowAlert(false), subMessage}: {
+function Alert({showAlert, setShowAlert, message, subMessage}: {
     showAlert: boolean,
     setShowAlert: React.Dispatch<React.SetStateAction<boolean>>,
     message: string,
-    callBack?: () => void;
     subMessage?: string
 }) {
 
@@ -17,8 +16,10 @@ function Alert({showAlert, setShowAlert, message, callBack = () => setShowAlert(
                      onClick={(e) => e.stopPropagation()}>
                     <h1 className="text-[1.8rem] font-semibold">{message}</h1>
                     <p className={'text-gray-500 text-[1.6rem] mt-5'}>{subMessage}</p>
-                    <Button variant={'default'} size={'lg'} className='mt-5 block w-max ml-auto' onClick={callBack}>
-                        Xác nhận</Button>
+                    <Button variant={'default'} size={'lg'} className='mt-5 block w-max ml-auto'
+                            onClick={() => setShowAlert(false)}>
+                        Xác nhận
+                    </Button>
                 </div>
             </div>
         )

@@ -43,7 +43,12 @@ interface ProductDetail {
 
 
 interface User {
-
+    id_user: string,
+    name: string,
+    avatar: string,
+    accessToken: string,
+    refreshToken: string,
+    role: number
 }
 
 interface Reviews {
