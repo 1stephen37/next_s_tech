@@ -1,4 +1,12 @@
-import {ApiUrl, FetchGet, FetchPost, tableName} from "@/app/constants";
+import {
+    ApiUrl,
+    FetchGet,
+    FetchGetWithToken,
+    FetchPost,
+    FetchPostWithToken,
+    GoogleApiUrl,
+    tableName
+} from "@/app/constants";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
@@ -29,6 +37,14 @@ const UsersModel = {
     },
     UserSignUp() {
         const {trigger, isMutating, error} = useSWRMutation(this.url + '/sign-up', FetchPost)
+        return {trigger, isMutating, error}
+    },
+    UserSignInWithGoogle() {
+        const {trigger, isMutating, error} = useSWRMutation(this.url + '/google', FetchPost)
+        return {trigger, isMutating, error}
+    },
+    GetInformationFormGoogle() {
+        const {trigger, isMutating, error} = useSWRMutation(GoogleApiUrl, FetchGetWithToken)
         return {trigger, isMutating, error}
     }
 }

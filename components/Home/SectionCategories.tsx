@@ -4,24 +4,27 @@ import BrandsModel from "@/models/brands/brands.model";
 import {cn} from "@/lib/utils";
 import ProductsModel from "@/models/products/products.model";
 import BoxProduct from "@/components/BoxProduct";
+import {Button} from "@/components/ui/button";
+import {useRouter} from "next/navigation";
 
 const SectionCategories = () => {
+    const router = useRouter();
     const [indexBrand, setIndexBrand] = useState(0);
     const [idBrand, setIdBrand] = useState('1');
     const {data: Brands, isLoading, isError} = BrandsModel.GetBrandsByLimit(5);
-    const [productsList , setProductsList] = useState<ProductBox[]>([]);
+    const [productsList, setProductsList] = useState<ProductBox[]>([]);
 
-    const { trigger } = ProductsModel.GetHotProductsByIdBrand(0, 10, idBrand)
+    const {trigger} = ProductsModel.GetHotProductsByIdBrand(0, 10, idBrand)
 
     useEffect(() => {
-        if(Brands) {
+        if (Brands) {
             trigger().then((data) => {
                 setProductsList(data.data);
             });
         }
     }, [Brands, idBrand]);
 
-    const handleChangeBrand = (index : number) => {
+    const handleChangeBrand = (index: number) => {
         setIndexBrand(index);
         setIdBrand(Brands[index].id_brand);
     }
@@ -40,9 +43,6 @@ const SectionCategories = () => {
                 ))}
             </div>
             <div className="h-max mt-10 grid grid-cols-5 gap-y-10 gap-x-10">
-                {/*{isProductsListLoading && (*/}
-                {/*    <div className="text-[2rem] text-center">product is loading...</div>*/}
-                {/*)}*/}
                 {productsList?.map((product, index) => (
                     <BoxProduct key={index} id={product.id_product} sale={product.sale_off}
                                 price={product.price.toString()} index={index} views={parseInt(product.views)}
@@ -50,6 +50,8 @@ const SectionCategories = () => {
                                 brand={product.brand_name} image={product.image} name={product.name}/>
                 ))}
             </div>
+            <Button onClick={() => router.push('/products')} variant={'link'} size={'lg'} className="py-5 mt-5 mx-auto">Xem
+                thêm</Button>
         </section>
     );
 };

@@ -1,20 +1,23 @@
 'use client';
 import React, {useState} from 'react';
-import {Button} from "@/components/ui/button"
+import {Button} from "@/components/ui/button";
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import {Input} from "@/components/ui/input"
-import {Label} from "@/components/ui/label"
+} from "@/components/ui/card";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
 import Link from "next/link";
 import {SubmitHandler, useForm} from "react-hook-form";
 import UsersModel from "@/models/users/users.model";
 import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {useRouter} from "next/navigation";
 import Alert from "@/components/Alert";
+import {GoogleLogin} from '@react-oauth/google';
+import {jwtDecode} from "jwt-decode";
+import {useGoogleLogin} from '@react-oauth/google';
 
 type Inputs = {
     email: string,
@@ -22,10 +25,43 @@ type Inputs = {
 };
 
 function Page() {
+    const login = useGoogleLogin({
+        onSuccess: tokenResponse => {
+            googleTrigger({token: tokenResponse.access_token})
+                .then(response => {
+                    const user = {
+                        email: response.email,
+                        name: response.given_name + ' ' + response.family_name,
+                        image: response.picture,
+                    };
+                    userGoogleTrigger(user)
+                        .then((response) => {
+                            if (response.message) {
+                                setErrorMessage(response.message);
+                            } else {
+                                let user = response.data as User;
+                                localStorage.setItem("user", JSON.stringify(user))
+                                localStorage.setItem("isLogin", "true");
+                                setShowAlert(true);
+                                setTimeout(() => {
+                                    if (user.role === 1 && !showAlert) {
+                                        router.push('/dashboard')
+                                    } else if (user.role === 0 && !showAlert) {
+                                        router.push('/')
+                                    }
+                                }, 2000)
+                            }
+                        })
+                    console.log(response);
+                })
+        },
+    });
     const [errorMessage, setErrorMessage] = useState('');
     const [showAlert, setShowAlert] = useState(false);
-    const router = useRouter()
-    const {trigger, isMutating, error} = UsersModel.UserSignIn();
+    const router = useRouter();
+    const {trigger: googleTrigger} = UsersModel.GetInformationFormGoogle();
+    const {trigger: userGoogleTrigger} = UsersModel.UserSignInWithGoogle();
+    const {trigger, error} = UsersModel.UserSignIn();
     const {register, handleSubmit, formState: {errors}}
         = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = async (formData) => {
@@ -33,7 +69,6 @@ function Page() {
             .then(data => {
                 if (data.message) {
                     setErrorMessage(data.message);
-                    console.log(data.message);
                 } else {
                     let user = data.data as User;
                     localStorage.setItem("user", JSON.stringify(user))
@@ -48,17 +83,18 @@ function Page() {
                     }, 2000)
                 }
             })
-
+            .catch(err => {
+                console.log(err);
+            })
     };
-
     const [showPassword, setShowPassword] = useState(false);
 
     return (
         <>
             <section className={"mt-[4rem] container"}>
                 <Card className="mx-auto shadow-md h-max min-h-[47dvh] w-[40%] border-primary">
-                    <Button onClick={() => router.push('/', {scroll: false})} variant='link'
-                            className="mt-[1rem] text-gray-500">
+                    <Button size={'default'} onClick={() => router.push('/', {scroll: false})} variant='link'
+                            className="mt-[1rem] text-2xl text-gray-500">
                         Trở về trang chủ
                     </Button>
                     <CardHeader>
@@ -130,9 +166,21 @@ function Page() {
                                 <Button type="submit" className="w-full mx-auto py-10">
                                     Đăng nhập
                                 </Button>
-                                <Button variant="outline" className="w-full shadow-md mx-auto py-10">
+                                <Button onClick={() => login()} type="button" variant="outline"
+                                        className="w-full shadow-md mx-auto py-10">
                                     Đăng nhập với Google
                                 </Button>
+                                {/*<GoogleLogin*/}
+                                {/*    onSuccess={credentialResponse => {*/}
+                                {/*        const decoded = jwtDecode(credentialResponse?.credential as string);*/}
+                                {/*        console.log(decoded);*/}
+                                {/*        // console.log(credentialResponse);*/}
+                                {/*    }}*/}
+                                {/*    onError={() => {*/}
+                                {/*        console.log('Login Failed');*/}
+                                {/*    }}*/}
+                                {/*    useOneTap*/}
+                                {/*/>;*/}
                             </div>
                         </form>
                         <div className="mt-5 text-center text-[1.8rem]">

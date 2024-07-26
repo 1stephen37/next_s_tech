@@ -30,6 +30,7 @@ interface ProductDetail {
         memory: string,
         color: string,
         image: string,
+        quantity: number
     }[],
     details: {
         name: string,
@@ -64,4 +65,16 @@ interface Reviews {
         avatar: string;
         name: string;
     }[];
+}
+
+interface Cart {
+    id_product: string
+    name: string
+    originPrice: number,
+    salePrice: number,
+    image: string,
+    color: string,
+    memory: string,
+    quantity: number,
+    stock: number
 }

@@ -1,37 +1,50 @@
-// import React from 'react';
-// import {
-//     AlertDialog,
-//     AlertDialogAction,
-//     AlertDialogCancel,
-//     AlertDialogContent,
-//     AlertDialogDescription,
-//     AlertDialogFooter,
-//     AlertDialogHeader,
-//     AlertDialogTitle,
-//     AlertDialogTrigger,
-// } from "@/components/ui/alert-dialog"
-//
-//
-// function Confirm() {
-//     return (
-//         <AlertDialog>
-//             <AlertDialogTrigger>Open</AlertDialogTrigger>
-//             <AlertDialogContent>
-//                 <AlertDialogHeader>
-//                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-//                     <AlertDialogDescription>
-//                         This action cannot be undone. This will permanently delete your account
-//                         and remove your data from our servers.
-//                     </AlertDialogDescription>
-//                 </AlertDialogHeader>
-//                 <AlertDialogFooter>
-//                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-//                     <AlertDialogAction>Continue</AlertDialogAction>
-//                 </AlertDialogFooter>
-//             </AlertDialogContent>
-//         </AlertDialog>
-//
-//     );
-// }
-//
-// export default Confirm;
+import React, {useEffect, useState} from 'react';
+import {Button} from "@/components/ui/button";
+
+function Confirm({showConfirm, setShowConfirm, message, subMessage, outState, setOutState}: {
+    showConfirm: boolean,
+    setShowConfirm: React.Dispatch<React.SetStateAction<boolean>>,
+    message: string,
+    subMessage?: string,
+    outState: boolean,
+    setOutState: React.Dispatch<React.SetStateAction<boolean>>,
+}) {
+
+    const [state, setState] = useState(false);
+
+    useEffect(() => {
+        setOutState(state);
+    }, [state, setState]);
+
+    if (showConfirm) {
+        return (
+            <div onClick={() => setShowConfirm(false)}
+                 className="fixed left-0 z-50 top-0 bg-[rgba(0,0,0,0.7)] grid place-items-center w-full h-screen">
+                <div className="bg-secondary p-10 rounded-2xl w-[35%] min-h-[180px] h-max text-[2rem]"
+                     onClick={(e) => e.stopPropagation()}>
+                    <h1 className="text-[1.8rem] font-semibold">{message}</h1>
+                    <p className={'text-gray-500 text-[1.6rem] mt-5'}>{subMessage}</p>
+                    <div className="w-max ml-auto flex gap-5 mt-5">
+                        <Button variant={'default'} size={'lg'} className=''
+                                onClick={() => {
+                                    setShowConfirm(false)
+                                    setState(false)
+                                }}>
+                            Hủy
+                        </Button>
+                        <Button variant={'default'} size={'lg'} className=''
+                                onClick={() => {
+                                    setShowConfirm(false)
+                                    setState(true)
+                                }}>
+                            Xác nhận
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+}
+
+export default Confirm;

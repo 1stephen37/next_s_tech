@@ -1,13 +1,21 @@
 'use client';
 import React, {useState} from 'react';
 import Alert from "@/components/Alert";
+import Image from 'next/image';
+
+const news = [
+    {
+        title: `iOS 18 mang tới cải tiến gì cho màn hình chính và khóa của iPhone ?`,
+        image: "",
+        content: "",
+    }
+]
 
 function News() {
     const [alert, setAlert] = useState(false);
 
     const handleAlert = () => {
         setAlert(true);
-        console.log('setAlert')
     }
 
     return (
@@ -17,10 +25,13 @@ function News() {
                     <h1 className="heading mb-5">Tin tức Công nghệ</h1>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                         <div onClick={handleAlert}
-                             className="bg-white cursor-pointer shadow-lg rounded-lg  flex flex-row">
+                             className="bg-white cursor-pointer shadow-lg rounded-lg flex flex-row">
                             <div className="p-10 flex flex-col justify-between">
+                                <Image alt={'tin tức 1'} className={'object-contain rounded-md mb-2'}
+                                       src={'/images/sections/news18-1.jpg'} width={380} height={50}/>
                                 <div>
-                                    <h2 className="text-[2rem] font-bold mb-4">iOS 18 mang tới cải tiến gì cho màn hình
+                                    <h2 className="text-[2rem] dark:text-secondary font-bold mb-4">iOS 18 mang tới cải
+                                        tiến gì cho màn hình
                                         chính và khóa của iPhone ?</h2>
                                     <p className="text-gray-700 text-[1.6rem]">Trong bài viết dưới đây, chúng ta hãy
                                         cùng tìm hiểu những thay đổi, cải tiến mà Apple đã mang đến cho màn hình chính
@@ -36,6 +47,9 @@ function News() {
                         <div onClick={handleAlert}
                              className="bg-white cursor-pointer shadow-lg rounded-lg  flex flex-row">
                             <div className="p-10 flex flex-col justify-between">
+                                <Image alt={'tin tức 2'} className={'object-contain rounded-md mb-2'}
+                                       src={'/images/sections/news-2-khong-quet-duoc-cccd-de-xac-thuc-sinh-trac-hoc-1.jpg'}
+                                       width={380} height={50}/>
                                 <div>
                                     <h2 className="text-[2rem] font-bold mb-4">Cách khắc phục lỗi không quét được CCCD
                                         để xác thực sinh trắc học ?</h2>
@@ -55,6 +69,9 @@ function News() {
                         <div onClick={handleAlert}
                              className="bg-white cursor-pointer shadow-lg rounded-lg  flex flex-row">
                             <div className="p-10 flex flex-col justify-between">
+                                <Image alt={'tin tức 3'} className={'object-contain rounded-md mb-2'}
+                                       src={'/images/sections/news-3-danh-gia-galaxy-z-fold3-23.jpg'} width={380}
+                                       height={50}/>
                                 <div>
                                     <h2 className="text-[2rem] font-bold mb-4">
                                         Đánh giá Galaxy Z Fold3 sau 3 năm sử dụng: của bền tại người !

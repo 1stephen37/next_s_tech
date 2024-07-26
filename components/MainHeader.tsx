@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import {useAppSelector, useAppDispatch} from '@/redux/hooks'
 import {searchChange} from "@/redux/reducers/search.reducer";
-import {getInitialFromLocalStorage} from '@/redux/reducers/user.reducer'
+import {getInitialFromLocalStorage, logOut} from '@/redux/reducers/user.reducer'
 import {useRouter} from 'next/navigation';
 import ProductsModel from "@/models/products/products.model";
 import BoxProductSearch from "@/components/BoxProductSearch";
@@ -33,6 +33,10 @@ import {
 import {MdSpaceDashboard} from "react-icons/md";
 import {ImProfile} from "react-icons/im";
 import {MdLogout} from "react-icons/md";
+import {getCartFromLocalStorage} from "@/redux/reducers/cart.reducer";
+import {MdOutlineHistory} from "react-icons/md";
+import Confirm from "@/components/Confirm";
+import Alert from "@/components/Alert";
 
 const imagesBrands = [
     {
@@ -84,6 +88,10 @@ function MainHeader() {
     const dispatch = useAppDispatch()
     const router = useRouter();
     const [showSearchBox, setShowSearchBox] = useState(false);
+    const [showConfirmLogOut, setShowConfirmLogOut] = useState(false);
+    const [showAlertLogOut, setShowAlertLogOut] = useState(false);
+    const [isLogOut, setIsLogOut] = useState(false);
+    const [cartLength, setCartLength] = useState(0);
     const [header, setHeader] = useState(false);
     useEffect(() => {
         const listenerScroll = () => {
@@ -96,9 +104,18 @@ function MainHeader() {
     const search = useAppSelector((state) => state.search.searchContent);
     const isLogin = useAppSelector((state) => state.user.isLogin);
     const userInformation = useAppSelector((state) => state.user.user);
+    const cart = useAppSelector((state) => state.cart.cart);
     useEffect(() => {
         dispatch(getInitialFromLocalStorage());
+        dispatch(getCartFromLocalStorage());
     }, []);
+    useEffect(() => {
+        if (cart.length > 0) {
+            let total = cart.reduce((total, item) => total + item.quantity, 0);
+            setCartLength(total);
+        }
+    }, [cart]);
+
     const {data: productsListSearch, isLoading: isSearching} = ProductsModel.GetProductsByKeyword(4, search);
     const handleSearchSubmit: FormEventHandler<HTMLFormElement> = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -121,6 +138,21 @@ function MainHeader() {
             setShowSearchBox(true)
         }
     }
+
+    const handleLogOut = () => {
+        setShowConfirmLogOut(true);
+    }
+
+    useEffect(() => {
+        if (isLogOut) {
+            dispatch(logOut());
+            setIsLogOut(false);
+            setTimeout(() => {
+                setShowAlertLogOut(true);
+                router.push('/');
+            }, 800)
+        }
+    }, [isLogOut]);
 
     return (
         <>
@@ -236,7 +268,7 @@ function MainHeader() {
                                     <DropdownMenuLabel className={'text-3xl'}>Tài khoản</DropdownMenuLabel>
                                     <DropdownMenuSeparator/>
                                     <DropdownMenuItem className={'text-2xl'}>
-                                        <Link href={'/profile'} className={'flex gap-5 '}>
+                                        <Link href={'/profile'} className={'flex gap-5 items-center'}>
                                             <ImProfile className={'text-2xl'}/>
                                             <div className="">
                                                 Trang hồ sơ
@@ -246,7 +278,12 @@ function MainHeader() {
                                     {userInformation.role === 0 ? (
                                         <>
                                             <DropdownMenuItem className={'text-2xl'}>
-                                                <Link href={'/profile'}>Lịch sử mua hàng</Link>
+                                                <Link href={'/history'} className={'flex gap-5 items-center'}>
+                                                    <MdOutlineHistory className={'text-2xl'}/>
+                                                    <div className="">
+                                                        Lịch sử mua hàng
+                                                    </div>
+                                                </Link>
                                             </DropdownMenuItem>
                                         </>
                                     ) : (
@@ -259,9 +296,9 @@ function MainHeader() {
                                             </DropdownMenuItem>
                                         </>
                                     )}
-                                    <DropdownMenuItem className={'text-2xl flex gap-5'}>
+                                    <DropdownMenuItem className={'text-2xl flex gap-5 items-center'}>
                                         <MdLogout className={'text-2xl'}/>
-                                        <div className="">
+                                        <div onClick={handleLogOut} className="">
                                             Đăng xuất
                                         </div>
                                     </DropdownMenuItem>
@@ -274,13 +311,24 @@ function MainHeader() {
                                 <span className="text-[2rem]">Tài khoản</span>
                             </Link>
                         )}
-                        <Link href="/cart" className="flex gap-3 items-center">
+                        <Link href="/cart" className="relative flex gap-3 items-center">
                             <LuShoppingCart className="text-[2rem] cursor-pointer"/>
                             <span className="text-[2rem]">Giỏ hàng</span>
+                            {cartLength !== 0 && (
+                                <span
+                                    className="absolute top-[-1.5rem] right-[-1.5rem] bg-primary dark:text-secondary
+                                     text-white rounded-full py-[0.2rem] px-[0.6rem] text-2xl">{cartLength}</span>
+                            )}
                         </Link>
                     </div>
                 </div>
             </header>
+            <Confirm message={'Bạn có chắc chắn muốn đăng xuất không ?'}
+                     subMessage={'Hành động này có thể khiến trải nghiệm mua sắm của bạn bị gián đoạn và không thể sử dụng một vài chức năng của chúng tôi.'}
+                     showConfirm={showConfirmLogOut} setShowConfirm={setShowConfirmLogOut} outState={isLogOut}
+                     setOutState={setIsLogOut}/>
+            <Alert showAlert={showAlertLogOut} setShowAlert={setShowAlertLogOut} message={'Đăng xuất thành công'}
+                   subMessage={"Bạn đã đăng xuất thành công khỏi hệ thống cửa hàng STECH, bạn có thể quay lại và hưởng những ưu đãi của hội viên."}/>
         </>
     )
         ;

@@ -15,10 +15,11 @@ type Product = {
     index: number;
     views: number;
     memory: string;
-    color: string
+    color: string;
+    isShowView?: boolean
 }
 
-function BoxProduct({id, name, image, brand, price, sale, index, views, memory, color}: Product) {
+function BoxProduct({id, name, image, brand, price, sale, index, views, memory, color, isShowView = false}: Product) {
 
     const router = useRouter()
     const handleDetailProduct = () => {
@@ -42,20 +43,23 @@ function BoxProduct({id, name, image, brand, price, sale, index, views, memory, 
                 </div>
                 <div
                     className="cursor-pointer capitalize text-[1.4rem] mb-[2px] mt-[5px] rounded">{brand}</div>
-                <h1 className="text-[1.8rem] group font-semibold text-left capitalize
+                <h1 className="text-[1.8rem] dark:text-secondary group font-semibold text-left capitalize
                  cursor-pointer max-h-[5rem] leading-[1.4]">{name.length < 35 ? ((name + ' ' + memory).length < 30 ? (name + ' ' + color + ' ' + memory) : (name + ' ' + memory)) : name}</h1>
                 <div
-                    className="text-[1.6rem] font-medium">{transformCurrency(Math.floor((((1 - (sale / 100)) * parseInt(price))) / 1000) * 1000)}</div>
+                    className="text-[1.6rem] dark:text-secondary font-medium">{transformCurrency(Math.floor((((1 - (sale / 100)) * parseInt(price))) / 1000) * 1000)}</div>
                 {sale !== 0 && (
                     <div
                         className="absolute top-0 right-0 text-[1.4rem] font-semibold text-secondary px-2 py-1
-                         rounded  bg-gradient-to-r from-orange-400 to-red-400">
+                         rounded dark:text-primary bg-gradient-to-r from-orange-400 to-red-400">
                         {sale}%
                     </div>
                 )}
                 {views >= 1000 && (
                     <div className="absolute top-0 left-0 text-[1.4rem] font-semibold
                      text-secondary px-2 py-1 rounded bg-gradient-to-r from-cyan-500 to-blue-500">Hot</div>
+                )}
+                {isShowView && (
+                    <div>view</div>
                 )}
             </motion.div>
         </motion.div>

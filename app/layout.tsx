@@ -4,6 +4,8 @@ import "./globals.css";
 import React from "react";
 import {ThemeProvider} from "@/app/theme-provider";
 import StoreProvider from "@/app/StoreProvider";
+import {GoogleOAuthProvider} from '@react-oauth/google';
+import {clientId} from "@/app/constants";
 
 const roboto = Roboto({subsets: ["latin"], weight: ["300", "400", "500", "700"]});
 
@@ -31,16 +33,18 @@ export default function RootLayout({
             />
         </head>
         <body className={roboto.className}>
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-        >
-            <StoreProvider>
-                {children}
-            </StoreProvider>
-        </ThemeProvider>
+        <GoogleOAuthProvider clientId="29284238727-9b23tun95m6npubqee97c52hahd44qfs.apps.googleusercontent.com">
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+            >
+                <StoreProvider>
+                    {children}
+                </StoreProvider>
+            </ThemeProvider>
+        </GoogleOAuthProvider>;
         </body>
         </html>
     );

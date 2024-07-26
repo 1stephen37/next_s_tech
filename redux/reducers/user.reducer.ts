@@ -16,11 +16,17 @@ const userReducer = createSlice({
         getInitialFromLocalStorage(state) {
             state.user = JSON.parse(localStorage.getItem('user') as string);
             state.isLogin = JSON.parse(localStorage.getItem('isLogin') as string);
+        },
+        logOut(state) {
+            state.isLogin = false;
+            state.user = <User>{};
+            localStorage.removeItem('user');
+            localStorage.removeItem('isLogin');
         }
     }
 })
 
 export const {
-    setIsLogin, setUserInformation, getInitialFromLocalStorage
+    setIsLogin, setUserInformation, getInitialFromLocalStorage, logOut
 } = userReducer.actions
 export default userReducer.reducer

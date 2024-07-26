@@ -10,7 +10,7 @@ function Page() {
     return (
         <section className="container relative">
             <Hero/>
-            <Brands />
+            <Brands/>
             <SectionSale/>
             <SectionCategories/>
             <News/>

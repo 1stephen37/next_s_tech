@@ -2,7 +2,7 @@ import React from 'react';
 import {ScrollArea} from "@/components/ui/scroll-area"
 
 
-function DetailsFullComponents({showDetails, setShowDetails, details}: {
+function DetailsFullComponents({showDetails, setShowDetails, details, memory}: {
     showDetails: boolean,
     setShowDetails: React.Dispatch<React.SetStateAction<boolean>>,
     details: {
@@ -13,6 +13,7 @@ function DetailsFullComponents({showDetails, setShowDetails, details}: {
             value: string
         }[]
     }[],
+    memory: string
 }) {
     if (showDetails && details.length > 0) {
         return (
@@ -30,12 +31,12 @@ function DetailsFullComponents({showDetails, setShowDetails, details}: {
                                     <div className="grid grid-cols-1 gap-y-5">
                                         {details.detail.map((detail, index) => {
                                             return (
-                                                <div key={index} className="flex justify-between">
+                                                <div key={index} data-index={index} className="flex justify-between">
                                                     <div className={`w-max min-w-[60%] py-2 
-                                                                px-5 rounded-md ` + `${index / 2 !== 0 ? "" :
+                                                                px-5 rounded-md ` + `${index % 2 !== 0 ? "" :
                                                         "bg-gray-100"}`}>{detail.name}</div>
                                                     <div className={`w-max min-w-[40%] py-2
-                                                                 px-5 rounded-md ` + `${index / 2 !== 0 ? "" :
+                                                                 px-5 rounded-md ` + `${index % 2 !== 0 ? "" :
                                                         "bg-gray-100"}`}>{detail.value}</div>
                                                 </div>
                                             )
