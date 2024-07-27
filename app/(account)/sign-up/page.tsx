@@ -55,7 +55,7 @@ export default function Page() {
             <section className="mt-[4rem] container">
                 <Card className="mx-auto shadow-md h-max min-h-[47dvh] w-[40%] border-primary">
                     <Button onClick={() => router.push('/', {scroll: false})} variant='link'
-                            className="mt-[1rem] text-left text-gray-500">
+                            className="mt-[1rem] text-2xl text-left text-gray-500">
                         Trở về trang chủ
                     </Button>
                     <CardHeader>
