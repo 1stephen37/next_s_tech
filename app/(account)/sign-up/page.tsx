@@ -15,6 +15,7 @@ import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import UsersModel from "@/models/users/users.model";
 import {useRouter} from 'next/navigation'
 import Alert from "@/components/Alert";
+import {useGoogleLogin} from "@react-oauth/google";
 
 type UserCreate = {
     name: string,
@@ -25,6 +26,8 @@ type UserCreate = {
 }
 
 export default function Page() {
+    const {trigger: googleTrigger} = UsersModel.GetInformationFormGoogle();
+    const {trigger: userGoogleTrigger} = UsersModel.UserSignInWithGoogle();
     const router = useRouter()
     const {trigger} = UsersModel.UserSignUp()
     const {register, handleSubmit, reset, formState: {errors}} = useForm<UserCreate>();
@@ -49,6 +52,37 @@ export default function Page() {
     const [showPassword, setShowPassword] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
     const [showAlert, setShowAlert] = useState(false);
+
+    const login = useGoogleLogin({
+        onSuccess: tokenResponse => {
+            googleTrigger({token: tokenResponse.access_token})
+                .then(response => {
+                    const user = {
+                        email: response.email,
+                        name: response.given_name + ' ' + response.family_name,
+                        image: response.picture,
+                    };
+                    userGoogleTrigger(user)
+                        .then((response) => {
+                            if (response.message) {
+                                setErrorMessage(response.message);
+                            } else {
+                                let user = response.data as User;
+                                localStorage.setItem("user", JSON.stringify(user))
+                                localStorage.setItem("isLogin", "true");
+                                setShowAlert(true);
+                                setTimeout(() => {
+                                    if (user.role === 1 && !showAlert) {
+                                        router.push('/dashboard')
+                                    } else if (user.role === 0 && !showAlert) {
+                                        router.push('/')
+                                    }
+                                }, 2000)
+                            }
+                        })
+                })
+        },
+    });
 
     return (
         <>
@@ -171,7 +205,8 @@ export default function Page() {
                             <Button type="submit" className="w-full py-10">
                                 Tạo tài khoản
                             </Button>
-                            <Button type="button" variant="outline" className="w-full shadow-md py-10">
+                            <Button onClick={() => login()} type="button" variant="outline"
+                                    className="w-full shadow-md py-10">
                                 Đăng kí với google
                             </Button>
                         </form>

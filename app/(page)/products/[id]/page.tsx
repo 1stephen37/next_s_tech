@@ -12,8 +12,8 @@ import {ScrollArea} from "@/components/ui/scroll-area"
 import {FaRegEye} from "react-icons/fa";
 import DetailsFullComponents from "@/components/products/DetailsFullComponents";
 import {AiOutlineShoppingCart} from 'react-icons/ai';
-import {useAppDispatch, useAppSelector} from "@/redux/hooks";
-import {addToCart, saveCartToLocalStorage, setCart} from "@/redux/reducers/cart.reducer";
+import {useAppDispatch} from "@/redux/hooks";
+import {addToCart, saveCartToLocalStorage} from "@/redux/reducers/cart.reducer";
 import {useRouter} from "next/navigation";
 import Alert from "@/components/Alert";
 
@@ -31,8 +31,7 @@ function Page({params}: { params: { id: string } }) {
     const [showZoom, setShowZoom] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const {data, isLoading, isError} = ProductsModel.GetProductById(params.id);
-    const cart = useAppSelector((state) => state.cart.cart);
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         setMainImageSrc((ApiImage + data?.options[indexImage].image));

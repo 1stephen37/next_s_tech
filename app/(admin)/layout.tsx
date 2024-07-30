@@ -3,13 +3,16 @@ import React from 'react';
 import {Button} from "@/components/ui/button";
 import Logo from "@/components/logo";
 import Link from 'next/link';
-import {BiSolidCategory} from "react-icons/bi";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {FaHome} from "react-icons/fa";
 import {usePathname} from "next/navigation";
 import {TbCategory, TbTruckDelivery} from "react-icons/tb";
 import {LuPackage} from "react-icons/lu";
 import {IoMdSettings} from "react-icons/io";
+import {FaTicketAlt} from "react-icons/fa";
+import {FaRegUser} from "react-icons/fa";
+import {CiShop} from "react-icons/ci";
+import {FaArrowLeft} from "react-icons/fa";
 import {
     Home,
     LineChart,
@@ -30,7 +33,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import {Input} from "@/components/ui/input";
 import {
-    DropdownMenu, DropdownMenuCheckboxItem,
+    DropdownMenu,
     DropdownMenuContent, DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
@@ -39,6 +42,7 @@ import {
 import Image from "next/image";
 import {FaBox} from 'react-icons/fa';
 import {FaComment} from "react-icons/fa";
+import {IoDocument} from "react-icons/io5";
 
 const links = [
     {
@@ -48,7 +52,7 @@ const links = [
     },
     {
         href: "/dashboard/categories",
-        name: "danh mục",
+        name: "thương hiệu",
         icon: <TbCategory/>
     },
     {
@@ -63,23 +67,23 @@ const links = [
     },
     {
         href: "/dashboard/reviews",
-        name: "Cảm nghĩ",
-        icon: <FaComment />
+        name: "Bình luận",
+        icon: <FaComment/>
     },
     {
-        href: "/dashboard/deliveries",
-        name: "vận chuyển",
-        icon: <TbTruckDelivery/>
+        href: "/dashboard/vouchers",
+        name: "mã giảm giá",
+        icon: <FaTicketAlt/>
     },
     {
-        href: "/dashboard/deliveries",
-        name: "vận chuyển",
-        icon: <TbTruckDelivery/>
+        href: "/dashboard/users",
+        name: "người dùng",
+        icon: <FaRegUser/>
     },
     {
-        href: "/dashboard/deliveries",
-        name: "vận chuyển",
-        icon: <TbTruckDelivery/>
+        href: "/dashboard/shop",
+        name: "Cửa hàng",
+        icon: <CiShop/>
     },
     {
         href: "/dashboard/orders",
@@ -91,14 +95,12 @@ const links = [
 function Layout({children}: { children: React.ReactElement }) {
     const path = usePathname();
 
-    console.log(links.filter(link => link.href === path)[0].name);
-
     return (
         <div className="w-full h-screen py-5 px-10 flex min-h-screen bg-muted/40">
             <div className="left-bar w-[15%]">
                 <Logo className="pl-10" href={'/dashboard'}/>
                 <p className="p pl-10 text-primary">Bring technology to everyone</p>
-                <ScrollArea className="mt-[3rem] h-[60dvh]">
+                <ScrollArea className="mt-[3rem] min-h-[60rem] h-[62dvh]">
                     <div className="flex flex-col gap-[1rem] h-max">
                         {links.map((link, index) => (
                             <Link key={index} className={`text-[2rem] capitalize flex w-max py-5 px-10
@@ -110,11 +112,19 @@ function Layout({children}: { children: React.ReactElement }) {
                         ))}
                     </div>
                 </ScrollArea>
-                <div className="">
-                    <div className="">
-                        <IoMdSettings/>
-                        <div className="">Cài đặt</div>
-                    </div>
+                <div className="bg-white w-max shadow-md rounded px-10 py-5 flex flex-col gap-5">
+                    <Link href={'/system/setting'} className="flex items-center gap-5 cursor-pointer w-max ">
+                        <IoMdSettings size={24}/>
+                        <span className="text-[2rem] hover:underline">Cài đặt</span>
+                    </Link>
+                    <Link href={'/system/document'} className="flex items-center gap-5 cursor-pointer w-max">
+                        <IoDocument size={24}/>
+                        <span className="text-[2rem] hover:underline">Tài liệu</span>
+                    </Link>
+                    <Link href={'/'} className="flex items-center gap-5 cursor-pointer w-max">
+                        <FaArrowLeft size={24}/>
+                        <span className="text-[2rem] hover:underline">Trở về trang chủ</span>
+                    </Link>
                 </div>
             </div>
             <div className="flex flex-col flex-1">

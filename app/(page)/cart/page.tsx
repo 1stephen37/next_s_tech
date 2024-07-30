@@ -12,7 +12,6 @@ import {
     downQuantityByIndex,
     removeCartItemByIndex,
     saveCartToLocalStorage,
-    setCart,
     upQuantityByIndex
 } from "@/redux/reducers/cart.reducer";
 import Confirm from "@/components/Confirm";
@@ -61,14 +60,13 @@ const Cart: React.FC = () => {
         setIsShowConfirm(true);
     }
 
-
     useEffect(() => {
         if (isRemoveCartItem) {
             dispatch(removeCartItemByIndex(index));
             dispatch(saveCartToLocalStorage());
             setIsRemoveCartItem(false);
         }
-    }, [isRemoveCartItem]);
+    }, [isRemoveCartItem, index, isShowConfirm]);
 
     return (
         <>

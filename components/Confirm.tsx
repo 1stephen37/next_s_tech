@@ -10,11 +10,6 @@ function Confirm({showConfirm, setShowConfirm, message, subMessage, outState, se
     setOutState: React.Dispatch<React.SetStateAction<boolean>>,
 }) {
 
-    const [state, setState] = useState(false);
-
-    useEffect(() => {
-        setOutState(state);
-    }, [state, setState]);
 
     if (showConfirm) {
         return (
@@ -28,14 +23,14 @@ function Confirm({showConfirm, setShowConfirm, message, subMessage, outState, se
                         <Button variant={'default'} size={'lg'} className=''
                                 onClick={() => {
                                     setShowConfirm(false)
-                                    setState(false)
+                                    setOutState(false)
                                 }}>
                             Hủy
                         </Button>
                         <Button variant={'default'} size={'lg'} className=''
                                 onClick={() => {
                                     setShowConfirm(false)
-                                    setState(true)
+                                    setOutState(true)
                                 }}>
                             Xác nhận
                         </Button>

@@ -15,8 +15,6 @@ import UsersModel from "@/models/users/users.model";
 import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {useRouter} from "next/navigation";
 import Alert from "@/components/Alert";
-import {GoogleLogin} from '@react-oauth/google';
-import {jwtDecode} from "jwt-decode";
 import {useGoogleLogin} from '@react-oauth/google';
 
 type Inputs = {
@@ -52,7 +50,6 @@ function Page() {
                                 }, 2000)
                             }
                         })
-                    console.log(response);
                 })
         },
     });
