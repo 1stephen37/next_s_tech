@@ -77,7 +77,7 @@ function Page() {
                         } else if (user.role === 0 && !showAlert) {
                             router.push('/')
                         }
-                    }, 2000)
+                    }, 1000)
                 }
             })
             .catch(err => {
@@ -88,7 +88,7 @@ function Page() {
 
     return (
         <>
-            <section className={"mt-[4rem] container"}>
+            <section className={"container"}>
                 <Card className="mx-auto shadow-md h-max min-h-[47dvh] w-[40%] border-primary">
                     <Button size={'default'} onClick={() => router.push('/', {scroll: false})} variant='link'
                             className="mt-[1rem] text-2xl text-gray-500">
@@ -167,17 +167,6 @@ function Page() {
                                         className="w-full shadow-md mx-auto py-10">
                                     Đăng nhập với Google
                                 </Button>
-                                {/*<GoogleLogin*/}
-                                {/*    onSuccess={credentialResponse => {*/}
-                                {/*        const decoded = jwtDecode(credentialResponse?.credential as string);*/}
-                                {/*        console.log(decoded);*/}
-                                {/*        // console.log(credentialResponse);*/}
-                                {/*    }}*/}
-                                {/*    onError={() => {*/}
-                                {/*        console.log('Login Failed');*/}
-                                {/*    }}*/}
-                                {/*    useOneTap*/}
-                                {/*/>;*/}
                             </div>
                         </form>
                         <div className="mt-5 text-center text-[1.8rem]">

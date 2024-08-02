@@ -86,7 +86,7 @@ export default function Page() {
 
     return (
         <>
-            <section className="mt-[4rem] container">
+            <section className="container">
                 <Card className="mx-auto shadow-md h-max min-h-[47dvh] w-[40%] border-primary">
                     <Button onClick={() => router.push('/', {scroll: false})} variant='link'
                             className="mt-[1rem] text-2xl text-left text-gray-500">

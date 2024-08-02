@@ -7,6 +7,10 @@ export const tableName = {
     users: 'users',
     products: 'products',
     reviews: 'reviews',
+    deliveries: "deliveries",
+    vouchers: "vouchers",
+    shop: 'shop',
+    orders: 'orders'
 }
 
 export const clientId = "https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?gsiwebsdk=3&client_id=304531247476-58f940f3b0dgrupg95cdo8b51fspupdv.apps.googleusercontent.com&scope=openid%20profile%20email&redirect_uri=storagerelay%3A%2F%2Fhttps%2Freact-oauth.vercel.app%3Fid%3Dauth641516&prompt=consent&access_type=offline&response_type=code&include_granted_scopes=true&enable_granular_consent=true&service=lso&o2v=2&ddm=0&flowName=GeneralOAuthFlow";

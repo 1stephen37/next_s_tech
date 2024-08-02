@@ -18,6 +18,7 @@ import {ApiImage} from "@/app/constants";
 import {cn} from "@/lib/utils";
 import {MdOutlineCancelPresentation} from "react-icons/md";
 import {useAppSelector} from "@/redux/hooks";
+import {useSearchParams} from "next/navigation";
 
 const filterList = [
     {
@@ -31,6 +32,8 @@ const filterList = [
 const limit = 15;
 
 function Page() {
+    const searchParams = useSearchParams();
+    const id_brand = searchParams.get('id_brand');
     const search = useAppSelector((state) => state.search.searchContent);
     const [page, setPage] = useState(1);
     const {data: Brands, isLoading, isError} = BrandsModel.GetAllBrands();
@@ -47,16 +50,19 @@ function Page() {
         isLoading: isSearching
     } = ProductsModel.GetProductsByKeywordAndPage(limit, page, search, idBrand);
 
-    console.log(searchPaging);
-
     useEffect(() => {
         if (search) {
-            console.log(123);
             setCountPage(Math.ceil(searchPaging?.total / limit));
         } else {
             setCountPage(Math.ceil(paging?.total / limit));
         }
     }, [paging?.total, searchPaging?.total, idBrand, countPage]);
+
+    useEffect(() => {
+        if (id_brand) {
+            setIdBrand(id_brand.toString());
+        }
+    }, [id_brand]);
 
     const handleSwitchBrand = (id_brand: string) => {
         setPage(1);

@@ -119,7 +119,6 @@ const Cart: React.FC = () => {
                                 </div>
                             </div>
                         ))}
-                        {/*<hr className={'px-10'}/>*/}
                         <div className="text-[2.2rem] font-semibold text-center mt-5">Tổng
                             : {transformCurrency(getTotalPrice())}</div>
                         <Button size={'lg'} onClick={() => router.push('/checkout')} className="w-max mx-auto mt-5">Thanh

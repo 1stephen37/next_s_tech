@@ -76,7 +76,7 @@ function Page({params}: { params: { id: string } }) {
 
     const handleByNow = () => {
         handleAddCart();
-        router.push('/cart')
+        router.push('/checkout')
     }
 
     const handlePrice = (index: number) => {

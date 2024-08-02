@@ -37,6 +37,7 @@ import {getCartFromLocalStorage} from "@/redux/reducers/cart.reducer";
 import {MdOutlineHistory} from "react-icons/md";
 import Confirm from "@/components/Confirm";
 import Alert from "@/components/Alert";
+import BrandsModel from "@/models/brands/brands.model";
 
 const imagesBrands = [
     {
@@ -87,6 +88,8 @@ const links = [
 function MainHeader() {
     const dispatch = useAppDispatch()
     const router = useRouter();
+    const {data: brandsList} = BrandsModel.GetBrandsByLimit(10);
+    const {data: productsList} = ProductsModel.GetSaleProducts(0, 4);
     const [showSearchBox, setShowSearchBox] = useState(false);
     const [showConfirmLogOut, setShowConfirmLogOut] = useState(false);
     const [showAlertLogOut, setShowAlertLogOut] = useState(false);
@@ -166,7 +169,7 @@ function MainHeader() {
                             <NavigationMenuList>
                                 <NavigationMenuItem>
                                     <NavigationMenuTrigger className={'text-[2rem] bg-none'}>
-                                        Danh Mục
+                                        ĐIều Hướng
                                     </NavigationMenuTrigger>
                                     <NavigationMenuContent
                                         className="flex gap-5 py-5 px-5 lg:w-max lg:max-w-[62rem] flex-col">
@@ -192,25 +195,31 @@ function MainHeader() {
                                         </NavigationMenuLink>
                                         <NavigationMenuLink className={'grid grid-cols-2'}>
                                             <div className="">
-                                                <h1 className={`text-center text-2xl`}>Các Hãng điện thoại phổ biến</h1>
-                                                <div className="flex flex-col gap-5">
-                                                    {imagesBrands.map((image, index) => (
-                                                        <div key={index} className="cursor-pointer">
-                                                            {image.name}
-                                                        </div>
-                                                    ))}
+                                                <h1 className={`pl-10 text-2xl font-semibold`}>Các Hãng điện thoại phổ
+                                                    biến</h1>
+                                                <div className="flex flex-col gap-5 mt-5">
+                                                    <div className="grid grid-cols-2 gap-5">
+                                                        {brandsList && brandsList.map((brand, index) => (
+                                                            <Link key={index}
+                                                                  href={`/products?id_brand=${brand.id_brand}`}
+                                                                  className="cursor-pointer pl-10 capitalize text-2xl">
+                                                                {brand.name}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col gap-5">
-                                                <Link href="/docs" title="Introduction">
-                                                    Re-usable components built using Radix UI and Tailwind CSS.
-                                                </Link>
-                                                <Link href="/docs/installation" title="Installation">
-                                                    How to install dependencies and structure your app.
-                                                </Link>
-                                                <Link href="/docs/primitives/typography" title="Typography">
-                                                    Styles for headings, paragraphs, lists...etc
-                                                </Link>
+                                            <div className="">
+                                                <h1 className={`text-center text-2xl font-semibold`}>Các sản phẩm điện
+                                                    thoại Khuyến mãi</h1>
+                                                <div className="flex flex-col gap-5 mt-5">
+                                                    {productsList && productsList.map((product, index) => (
+                                                        <Link key={index} className={'text-2xl'}
+                                                              href={`/products/${product.id_product}`}>
+                                                            {product.name} - {product.sale_off}%
+                                                        </Link>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </NavigationMenuLink>
                                     </NavigationMenuContent>

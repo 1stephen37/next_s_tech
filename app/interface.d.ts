@@ -81,3 +81,62 @@ interface Cart {
     quantity: number,
     stock: number
 }
+
+interface Delivery {
+    id_delivery: string;
+    name: string;
+    price: number;
+    speed: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+}
+
+interface Voucher {
+    id_voucher: string;
+    code: string;
+    discount: number;
+    max_discount: number;
+    min_discount: number;
+    is_percent: boolean;
+    expired: boolean;
+    end_date: string;
+    created_at: string;
+    updated_at: string;
+}
+
+interface Shop {
+    id_shop: string,
+    name: string,
+    address: string,
+    phone: string,
+    email: string,
+    status: number
+}
+
+interface Order {
+    id_order?: string,
+    code?: string,
+    name: string,
+    email: string,
+    address: string,
+    phone: string,
+    status: number,
+    original_total: number,
+    total: number,
+    created_at?: string,
+    updated_at?: string,
+    receiver_name?: string,
+    receiver_email?: string,
+    receiver_address?: string,
+    receiver_phone?: string,
+}
+
+interface OrderDetail {
+    id_product: string,
+    origin_price: number,
+    sale_price: number,
+    memory: string,
+    color: string,
+    quantity: number
+}
