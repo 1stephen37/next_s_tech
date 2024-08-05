@@ -1,9 +1,9 @@
 interface Brand {
     id_brand: string;
     name: string;
-    description: string;
     logo: string;
-    status: number
+    status: number,
+    count?: number;
 }
 
 interface ProductBox {
@@ -16,6 +16,7 @@ interface ProductBox {
     views: string,
     memory: string,
     color: string,
+    status: number
 }
 
 interface ProductDetail {
@@ -68,6 +69,7 @@ interface Reviews {
         avatar: string;
         name: string;
     }[];
+    product_name: string;
 }
 
 interface Cart {
@@ -87,7 +89,7 @@ interface Delivery {
     name: string;
     price: number;
     speed: string;
-    status: string;
+    status: number;
     created_at: string;
     updated_at: string;
 }
@@ -122,7 +124,7 @@ interface Order {
     address: string,
     phone: string,
     status: number,
-    original_total: number,
+    origin_total: number,
     total: number,
     created_at?: string,
     updated_at?: string,
@@ -130,6 +132,18 @@ interface Order {
     receiver_email?: string,
     receiver_address?: string,
     receiver_phone?: string,
+    distance: number,
+    ship_fee: number,
+    avatar?: string,
+    details?: {
+        id_product: string,
+        origin_price: number,
+        sale_price: number,
+        memory: string,
+        color: string,
+        quantity: number,
+        product_name: string,
+    }[]
 }
 
 interface OrderDetail {
@@ -140,3 +154,4 @@ interface OrderDetail {
     color: string,
     quantity: number
 }
+

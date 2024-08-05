@@ -3,62 +3,46 @@ import React, {useEffect, useState} from 'react';
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import OrdersModel from "@/models/ỏders/orders.model";
-import {useAppSelector} from "@/redux/hooks";
+import Image from "next/image";
+import {ApiImage, BrandStatus} from "@/app/constants";
 import {Badge} from "@/components/ui/badge";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
-import Image from 'next/image';
-import {ApiImage, OrderStatus, transformCurrency} from "@/app/constants";
+import BrandsModel from "@/models/brands/brands.model";
 
-type OrderStatusKey = keyof typeof OrderStatus;
+type BrandStatusKey = keyof typeof BrandStatus;
+
 
 function Page() {
-    const [limit, setLimit] = useState(5);
     const [page, setPage] = useState(1);
-    const {trigger: orderTrigger} = OrdersModel.GetOrdersLimitPage(page, limit);
-    const [orders, setOrders] = useState<Order[]>([])
-    const user = useAppSelector(state => state.user.user);
+    const [limit, setLimit] = useState(10)
+    const {data: brands} = BrandsModel.GetBrandsLimitPage(page, limit)
 
     useEffect(() => {
-        orderTrigger({token: user.accessToken})
-            .then((res) => {
-                console.log(res);
-                setOrders(res.data as Order[]);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-    }, [user]);
-
+        console.log(brands)
+    }, [brands]);
     return (
         <ScrollArea className="w-full h-full">
             <section className="flex-1 space-y-4 p-4 pt-6 md:p-8">
                 <Card x-chunk="dashboard-06-chunk-0">
                     <CardHeader>
-                        <CardTitle className={'text-[2rem]'}>Sản phẩm</CardTitle>
+                        <CardTitle className={'text-[2rem]'}>Thương hiệu</CardTitle>
                         <CardDescription className={'text-[1.6rem]'}>
-                            Quản lý sản phẩm
+                            Quản lý thương hiệu
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="hidden w-[100px] sm:table-cell">
+                                    <TableHead className="hidden w-[20rem] sm:table-cell">
                                         <span className="sr-only">Image</span>
                                     </TableHead>
-                                    <TableHead className={'text-[2rem] w-[30rem]'}>Thông tin Đặt hàng</TableHead>
+                                    <TableHead className={'text-[2rem] text-center'}>Tên thương hiệu</TableHead>
                                     <TableHead className={'text-[2rem] text-center'}>Trạng thái</TableHead>
                                     <TableHead className="hidden text-[2rem] text-center md:table-cell">
-                                        Tổng tiền
-                                    </TableHead>
-                                    <TableHead className="hidden text-[2rem] text-center md:table-cell">
-                                        Giá
-                                    </TableHead>
-                                    <TableHead className="hidden text-[2rem] text-center md:table-cell">
-                                        Lượt xem
+                                        Số lượng sản phẩm
                                     </TableHead>
                                     <TableHead className="text-[2rem] text-center">
                                         Hành động
@@ -66,35 +50,26 @@ function Page() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {orders && orders.map((order, index) => (
+                                {brands && brands.map((brand, index) => (
                                     <TableRow key={index}>
                                         <TableCell className="hidden sm:table-cell">
                                             <Image
                                                 alt="Product image"
-                                                className="aspect-square rounded-md object-cover"
-                                                height="64"
-                                                src={order.avatar ? (order.avatar.startsWith('https') ? (order.avatar) : (ApiImage + order.avatar)) : ('/images/sections/avatar-user-review-2.jpg')}
-                                                width="70"
+                                                className="aspect-square mx-auto rounded-md object-contain"
+                                                height="30"
+                                                src={ApiImage + brand.logo}
+                                                width={150}
                                             />
                                         </TableCell>
-                                        <TableCell className="font-normal text-2xl">
-                                            <p>Tên người đặt: {order.name}</p>
-                                            <p>Email người đặt: {order.email}</p>
-                                            <p>Số điện thoại người đặt: {order.phone}</p>
-                                            <p>Địa chỉ người đặt: {order.address}</p>
+                                        <TableCell className="font-medium capitalize text-center text-2xl">
+                                            {brand.name}
                                         </TableCell>
                                         <TableCell>
                                             <Badge className={'text-2xl mx-auto block w-max'}
-                                                   variant="outline">{OrderStatus[order.status as OrderStatusKey]}</Badge>
-                                        </TableCell>
-                                        <TableCell className="md:table-cell text-center text-2xl">
-                                            {transformCurrency(order.total)}
+                                                   variant="outline">{BrandStatus[brand.status as BrandStatusKey]}</Badge>
                                         </TableCell>
                                         <TableCell className="hidden text-2xl text-center md:table-cell">
-
-                                        </TableCell>
-                                        <TableCell className="hidden text-2xl text-center md:table-cell">
-
+                                            {brand.count}
                                         </TableCell>
                                         <TableCell>
                                             <DropdownMenu>
@@ -121,13 +96,14 @@ function Page() {
                                         </TableCell>
                                     </TableRow>
                                 ))}
+
                             </TableBody>
                         </Table>
                     </CardContent>
                     <CardFooter>
                         <div className="text-2xl text-muted-foreground">
                             {/*/Showing <strong>1-{limit}</strong> of <strong>{productPaging?.total}</strong>{" "}*/}
-                            products
+                            Hiển thị {limit} trên 10
                         </div>
                     </CardFooter>
                 </Card>

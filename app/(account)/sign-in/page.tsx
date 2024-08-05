@@ -1,5 +1,5 @@
 'use client';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button} from "@/components/ui/button";
 import {
     Card,
@@ -16,6 +16,7 @@ import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {useRouter} from "next/navigation";
 import Alert from "@/components/Alert";
 import {useGoogleLogin} from '@react-oauth/google';
+// import usePathHistory from "@/hooks/usePathHistory";
 
 type Inputs = {
     email: string,
@@ -85,6 +86,10 @@ function Page() {
             })
     };
     const [showPassword, setShowPassword] = useState(false);
+
+    useEffect(() => {
+        router.back();
+    }, []);
 
     return (
         <>

@@ -5,7 +5,9 @@ import {useRouter} from "next/navigation";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks";
 import Image from "next/image";
 import {getInitialFromLocalStorage} from "@/redux/reducers/user.reducer";
-import {getCartFromLocalStorage} from "@/redux/reducers/cart.reducer";
+import {ApiImage, UserRole} from "@/app/constants";
+
+type UserRoleKey = keyof typeof UserRole;
 
 function Page() {
     const dispatch = useAppDispatch()
@@ -13,12 +15,11 @@ function Page() {
         dispatch(getInitialFromLocalStorage());
     }, []);
     const userInformation = useAppSelector((state) => state.user.user);
-    console.log(userInformation);
     const router = useRouter();
     if (userInformation.image) {
         return (
             <section className={'w-max h-max flex gap-10 items-center'}>
-                <div className="bg-white w-[30rem] shadow-lg rounded-lg p-5">
+                <div className="bg-white w-[50rem] shadow-lg rounded-lg p-5">
                     <Button onClick={() => router.push('/', {scroll: false})} variant='link'
                             className="text-2xl mb-3 text-gray-500">
                         Trở về trang chủ
@@ -124,11 +125,12 @@ function Page() {
                         Trở về trang chủ
                     </Button>
                     <div className="flex flex-col items-center">
-                        <Image src={'/images/sections/avatar-user-review-2.jpg'}
-                               className={'object-contain rounded-full'} alt={''}
-                               width={150} height={150}/>
+                        <Image
+                            src={userInformation.image ? (userInformation.image.startsWith('https') ? (userInformation.image) : (ApiImage + userInformation.image)) : '/images/sections/avatar-user-review-2.jpg'}
+                            className={'object-contain rounded-full'} alt={''}
+                            width={150} height={150}/>
                         <h1 className="text-[2.4rem] font-semibold capitalize mb-2">{userInformation.name}</h1>
-                        <p className="text-gray-500 text-2xl mb-4">Khách hàng</p>
+                        <p className="text-gray-500 text-2xl mb-4 first-letter:capitalize">{UserRole[userInformation.role as UserRoleKey]}</p>
                         <div className="flex space-x-4 text-2xl mb-4">
                             <a
                                 href="#"

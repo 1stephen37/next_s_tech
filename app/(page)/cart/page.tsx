@@ -10,7 +10,7 @@ import Link from "next/link";
 import Image from 'next/image';
 import {
     downQuantityByIndex,
-    removeCartItemByIndex,
+    removeCartItemByIndex, resetCart,
     saveCartToLocalStorage,
     upQuantityByIndex
 } from "@/redux/reducers/cart.reducer";
@@ -62,8 +62,12 @@ const Cart: React.FC = () => {
 
     useEffect(() => {
         if (isRemoveCartItem) {
-            dispatch(removeCartItemByIndex(index));
-            dispatch(saveCartToLocalStorage());
+            if (cart.length === 1) {
+                dispatch(resetCart());
+            } else {
+                dispatch(removeCartItemByIndex(index));
+                dispatch(saveCartToLocalStorage());
+            }
             setIsRemoveCartItem(false);
         }
     }, [isRemoveCartItem, index, isShowConfirm]);
@@ -102,7 +106,7 @@ const Cart: React.FC = () => {
                                             <div className="text-2xl">Bộ nhớ trong: {item.memory}</div>
                                             <div className="text-2xl">Màu: {item.color}</div>
                                             <div onClick={() => handleRemoveCartItem(index)}
-                                                 className="text-orange-400 hover:underline cursor-pointer select-none text-2xl">Xóa
+                                                 className="text-orange-500 font-semibold hover:underline cursor-pointer select-none text-2xl">Xóa
                                             </div>
                                         </div>
                                     </div>

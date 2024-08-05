@@ -34,6 +34,10 @@ const cartReducer = createSlice({
         saveCartToLocalStorage(state) {
             localStorage.setItem('cart', JSON.stringify(state.cart))
         },
+        resetCart(state) {
+            localStorage.removeItem('cart');
+            state.cart = [] as Cart[];
+        },
         getCartFromLocalStorage(state) {
             state.cart = JSON.parse(localStorage.getItem('cart') as string) || [] as Cart[];
         }
@@ -45,6 +49,7 @@ export const {
     upQuantityByIndex,
     downQuantityByIndex,
     setCart,
+    resetCart,
     saveCartToLocalStorage,
     removeCartItemByIndex,
     getCartFromLocalStorage

@@ -20,7 +20,7 @@ function Confirm({showConfirm, setShowConfirm, message, subMessage, outState, se
                     <h1 className="text-[1.8rem] font-semibold">{message}</h1>
                     <p className={'text-gray-500 text-[1.6rem] mt-5'}>{subMessage}</p>
                     <div className="w-max ml-auto flex gap-5 mt-5">
-                        <Button variant={'default'} size={'lg'} className=''
+                        <Button variant={'secondary'} size={'lg'} className=''
                                 onClick={() => {
                                     setShowConfirm(false)
                                     setOutState(false)

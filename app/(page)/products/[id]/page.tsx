@@ -15,7 +15,8 @@ import {AiOutlineShoppingCart} from 'react-icons/ai';
 import {useAppDispatch} from "@/redux/hooks";
 import {addToCart, saveCartToLocalStorage} from "@/redux/reducers/cart.reducer";
 import {useRouter} from "next/navigation";
-import Alert from "@/components/Alert";
+// import Alert from "@/components/Alert";
+import toast, {Toaster} from "react-hot-toast";
 
 
 function Page({params}: { params: { id: string } }) {
@@ -29,7 +30,7 @@ function Page({params}: { params: { id: string } }) {
     const [indexOption, setIndexOption] = useState(0);
     const [showDetail, setShowDetail] = useState(false);
     const [showZoom, setShowZoom] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
+    // const [showAlert, setShowAlert] = useState(false);
     const {data, isLoading, isError} = ProductsModel.GetProductById(params.id);
     const dispatch = useAppDispatch();
 
@@ -71,12 +72,22 @@ function Page({params}: { params: { id: string } }) {
         }
         dispatch(addToCart(cartItem));
         dispatch(saveCartToLocalStorage());
-        setShowAlert(true);
+        console.log(123)
+        toast.success('Đã thêm vào giỏ hàng thành công', {
+            duration: 2000,
+            className: 'text-2xl flex item-center',
+            iconTheme: {
+                primary: '#000',
+                secondary: '#fff',
+            },
+        })
     }
 
     const handleByNow = () => {
         handleAddCart();
-        router.push('/checkout')
+        setTimeout(() => {
+            router.push('/checkout')
+        }, 1500)
     }
 
     const handlePrice = (index: number) => {
@@ -223,7 +234,6 @@ function Page({params}: { params: { id: string } }) {
                                     <Button onClick={handleByNow} size={'lg'} variant={'default'}>Mua ngay</Button>
                                     <Button onClick={handleAddCart} variant={'secondary'} className={'flex gap-3'}
                                             size={'lg'}>
-                                        <AiOutlineShoppingCart/>
                                         <span className={'text-2xl'}>Thêm vào giỏ hàng</span>
                                     </Button>
                                 </div>
@@ -299,9 +309,13 @@ function Page({params}: { params: { id: string } }) {
                 <DetailsFullComponents memory={data?.options[indexImage].memory} showDetails={showDetail}
                                        setShowDetails={setShowDetail}
                                        details={data.details}/>
-                <Alert showAlert={showAlert} setShowAlert={setShowAlert}
-                       subMessage={'Sản phẩm đã được thêm vào giỏ hàng của bạn. Bạn có thể truy cập vào giỏ hàng của mình để tiến hành thanh toán hoặc tiếp tục mua sắm'}
-                       message={'Thêm vào giỏ hàng thành công'}/>
+                {/*<Alert showAlert={showAlert} setShowAlert={setShowAlert}*/}
+                {/*       subMessage={'Sản phẩm đã được thêm vào giỏ hàng của bạn. Bạn có thể truy cập vào giỏ hàng của mình để tiến hành thanh toán hoặc tiếp tục mua sắm'}*/}
+                {/*       message={'Thêm vào giỏ hàng thành công'}/>*/}
+                <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                />
             </>
         );
     }

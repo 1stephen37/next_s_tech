@@ -15,6 +15,22 @@ const VouchersModel = {
             isLoading,
             isError: error
         }
+    },
+    GetVouchersLimitPage(page: number, limit: number) {
+        const offset = (page - 1) * limit;
+        const {data: voucher, error, isLoading}: {
+            data: {
+                data: Voucher[]
+            },
+            error: Error | any,
+            isLoading: boolean
+        } =
+            useSWR(this.url + `?offset=${offset}&limit=${limit}&page=${page}`, FetchGet)
+        return {
+            data: voucher?.data,
+            isLoading,
+            isError: error
+        }
     }
 }
 

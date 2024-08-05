@@ -40,6 +40,19 @@ export const FetchGetWithToken = async (url: string, {arg}: { arg: { token: stri
         .catch((err) => err.message)
 }
 
+export const FetchGetWithTokenAndDynamicIdUser = async (url: string, {arg}: {
+    arg: { token: string, id_user: string }
+}) => {
+    return fetch(url + `?id_user=${arg.id_user}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            "authorization": "Bearer " + arg.token
+        },
+        method: 'GET',
+    }).then(res => res.json())
+        .catch((err) => err.message)
+}
+
 
 // export const FetchPost = async (url: string, { body } : {body : {}}) => fetch(url, {
 //     headers: {'Content-Type': 'application/json'},
@@ -69,5 +82,40 @@ export async function FetchPost(url: string, {arg}: { arg: {} }) {
 }
 
 export const transformCurrency = (value: number): string => {
-    return value.toLocaleString('vi-VN', {style: 'currency', currency: 'VND', currencyDisplay: 'code'});
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        currencyDisplay: 'code',
+    }).format(value);
 }
+
+
+export const ProductStatus = {
+    0: "hết hàng",
+    1: "đang bán",
+    2: "xảy ra lỗi"
+} as const;
+
+export const DeliveryStatus = {
+    0: "ngưng hoạt động",
+    1: "đang hoạt động",
+    2: "đang quá tải"
+} as const;
+
+export const UserRole = {
+    0: "khách hàng",
+    1: "quản trị viên"
+} as const;
+
+export const BrandStatus = {
+    0: "tạm ngừng kinh doanh",
+    1: "đang hoạt động"
+} as const;
+
+export const OrderStatus = {
+    0: "Chờ xác nhận",
+    1: "Đã xác nhận",
+    2: "Đang giao hàng",
+    3: "Đã giao hàng",
+    4: "Đã hủy",
+} as const;

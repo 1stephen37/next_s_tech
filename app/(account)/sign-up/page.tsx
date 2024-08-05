@@ -34,9 +34,8 @@ export default function Page() {
     const onSubmit: SubmitHandler<UserCreate> = async (formData) => {
         await trigger(formData)
             .then((data) => {
-                console.log(data);
-                if (data.message) {
-                    setErrorMessage(data.message);
+                if (data.error) {
+                    setErrorMessage(data.error);
                 } else {
                     let user = data.data as User;
                     localStorage.setItem("user", JSON.stringify(user))

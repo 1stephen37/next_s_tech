@@ -1,16 +1,16 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import {Button} from '@/components/ui/button';
+import {Calendar} from '@/components/ui/calendar';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { CiCalendar } from "react-icons/ci";
-import { addDays, format } from 'date-fns';
+import {cn} from '@/lib/utils';
+import {CiCalendar} from "react-icons/ci";
+import {addDays, format} from 'date-fns';
 import * as React from 'react';
-import { DateRange } from 'react-day-picker';
+import {DateRange} from 'react-day-picker';
 
 export function CalendarDateRangePicker({
                                             className
@@ -28,11 +28,11 @@ export function CalendarDateRangePicker({
                         id="date"
                         variant={'outline'}
                         className={cn(
-                            'w-[260px] justify-start text-left font-normal',
+                            'w-max py-[2rem] px-[1rem] justify-start text-left font-normal',
                             !date && 'text-muted-foreground'
                         )}
                     >
-                        <CiCalendar className="mr-2 h-4 w-4" />
+                        <CiCalendar className="mr-2 h-10 w-10"/>
                         {date?.from ? (
                             date.to ? (
                                 <>

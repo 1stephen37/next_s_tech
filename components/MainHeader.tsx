@@ -116,6 +116,8 @@ function MainHeader() {
         if (cart.length > 0) {
             let total = cart.reduce((total, item) => total + item.quantity, 0);
             setCartLength(total);
+        } else {
+            setCartLength(0);
         }
     }, [cart]);
 

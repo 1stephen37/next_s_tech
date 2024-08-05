@@ -16,6 +16,22 @@ const reviewsModel = {
     CreateNewRepComment() {
         const {trigger, isMutating, error} = useSWRMutation(this.url + '/reply/add', FetchPost)
         return {trigger, isMutating, error}
+    },
+    GetReviewAndRepliesLimitByPage(page: number, limit: number) {
+        const offset = (page - 1) * limit;
+        const {data: reviews, error, isLoading}: {
+            data: {
+                data: Reviews[]
+            },
+            error: Error | any,
+            isLoading: boolean
+        } =
+            useSWR(this.url + `?offset=${offset}&limit=${limit}&page=${page}`, FetchGet)
+        return {
+            data: reviews?.data,
+            isLoading,
+            isError: error
+        }
     }
 }
 

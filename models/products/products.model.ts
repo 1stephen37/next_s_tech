@@ -49,7 +49,7 @@ const ProductsModel = {
             error: Error | any,
             isLoading: boolean
         } =
-            useSWR(this.url + `?offset=${offset}&limit=${limit}&page=${page}${id_brand !== '' ? `&id_brand=${id_brand}` : ''}`, FetchGet)
+            useSWR(this.url + `?offset=${offset}&limit=${limit}&page=${page}${id_brand ? `&id_brand=${id_brand}` : ''}`, FetchGet)
         return {
             data: products?.data,
             paging: products?.paging,

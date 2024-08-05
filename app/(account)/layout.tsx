@@ -1,8 +1,8 @@
 import React from 'react';
 
-function Layout({children} : { children : React.ReactElement}) {
+function Layout({children}: { children: React.ReactElement }) {
     return (
-        <main className="container flex justify-center items-center py-[5%] h-screen">
+        <main className="container flex justify-center items-center h-screen">
             {children}
         </main>
     );

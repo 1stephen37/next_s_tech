@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button} from "@/components/ui/button";
 import Logo from "@/components/logo";
 import Link from 'next/link';
@@ -43,6 +43,8 @@ import Image from "next/image";
 import {FaBox} from 'react-icons/fa';
 import {FaComment} from "react-icons/fa";
 import {IoDocument} from "react-icons/io5";
+import {useAppDispatch, useAppSelector} from "@/redux/hooks";
+import {getInitialFromLocalStorage} from "@/redux/reducers/user.reducer";
 
 const links = [
     {
@@ -51,7 +53,7 @@ const links = [
         icon: <FaHome/>
     },
     {
-        href: "/dashboard/categories",
+        href: "/dashboard/brands",
         name: "thương hiệu",
         icon: <TbCategory/>
     },
@@ -94,9 +96,15 @@ const links = [
 
 function Layout({children}: { children: React.ReactElement }) {
     const path = usePathname();
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(state => state.user.user);
+
+    useEffect(() => {
+        dispatch(getInitialFromLocalStorage());
+    }, []);
 
     return (
-        <div className="w-full h-screen py-5 px-10 flex min-h-screen bg-muted/40">
+        <div className="w-full h-screen py-5 px-10 flex min-h-screen bg-muted/40 relative">
             <div className="left-bar w-[15%]">
                 <Logo className="pl-10" href={'/dashboard'}/>
                 <p className="p pl-10 text-primary">Bring technology to everyone</p>
@@ -188,14 +196,14 @@ function Layout({children}: { children: React.ReactElement }) {
                         <BreadcrumbList>
                             <BreadcrumbItem>
                                 <BreadcrumbLink asChild>
-                                    <Link className="text-3xl" href="/dashboard">Trang quản trị</Link>
+                                    <Link className="text-[2.4rem]" href="/dashboard">Trang quản trị</Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
                             {path !== '/dashboard' && (
                                 <BreadcrumbSeparator/>
                             )}
                             <BreadcrumbItem>
-                                {path !== '/dashboard' && (
+                                {path !== '/dashboard' && path.split('/').length == 3 && (
                                     <BreadcrumbPage
                                         className="text-3xl capitalize cursor-pointer">{links.filter(link => link.href === path)[0].name}</BreadcrumbPage>
                                 )}
@@ -203,11 +211,12 @@ function Layout({children}: { children: React.ReactElement }) {
                         </BreadcrumbList>
                     </Breadcrumb>
                     <div className="relative ml-auto h-[4rem] flex-1 md:grow-0">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"/>
+                        <Search size={30}
+                                className="absolute cursor-pointer left-2.5 top-2.5 h-[2rem] w-[2rem] text-muted-foreground"/>
                         <Input
                             type="search"
                             placeholder="Search..."
-                            className="w-full lg:h-[3.5rem] text-3xl outline-0 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[400px]"
+                            className="w-full lg:h-[3.5rem] text-gray-600 text-3xl outline-0 rounded-lg bg-background pl-[3.5rem] md:w-[200px] lg:w-[400px]"
                         />
                     </div>
                     <DropdownMenu>
@@ -215,24 +224,24 @@ function Layout({children}: { children: React.ReactElement }) {
                             <Button
                                 variant="outline"
                                 size="icon"
-                                className="overflow-hidden rounded-full"
+                                className="overflow-hidden h-max w-max rounded-full"
                             >
                                 <Image
-                                    src="/images/sections/avatar-user-review-3.jpg"
-                                    width={36}
-                                    height={36}
+                                    src="/images/sections/avatar-user-review-2.jpg"
+                                    width={40}
+                                    height={40}
                                     alt="Avatar"
-                                    className="overflow-hidden rounded-full"
+                                    className="overflow-hidden w-max h-max rounded-full"
                                 />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuLabel className={'text-2xl capitalize'}>{user.name}</DropdownMenuLabel>
                             <DropdownMenuSeparator/>
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
-                            <DropdownMenuItem>Support</DropdownMenuItem>
+                            <DropdownMenuItem className={'text-2xl'}>Hồ sơ cá nhân</DropdownMenuItem>
+                            <DropdownMenuItem className={'text-2xl'}>Hỗ trợ</DropdownMenuItem>
                             <DropdownMenuSeparator/>
-                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                            <DropdownMenuItem className={'text-2xl'}>Đăng xuất</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </header>

@@ -40,18 +40,15 @@ const CommentSection = ({idProduct}: { idProduct: string }) => {
                     <div key={index} className="w-full p-4 rounded-lg shadow-md">
                         <div className="flex items-center gap-5">
                             <div className="w-max h-max">
-                                {comment.avatar ? (
-                                    <Image alt={''} className={'rounded-full'} src={ApiImage + comment.avatar}
-                                           width={50} height={50}/>
-                                ) : (
-                                    <Image alt={''} className={'rounded-full'}
-                                           src={'/images/sections/avatar-user-review-2.jpg'} width={50} height={50}/>
-                                )}
+                                <Image
+                                    src={comment.avatar ? (comment.avatar.startsWith('https') ? (comment.avatar) : (ApiImage + comment.avatar)) : '/images/sections/avatar-user-review-2.jpg'}
+                                    className={'object-contain rounded-full'} alt={''}
+                                    width={50} height={50}/>
                             </div>
                             <h3 className="text-3xl capitalize font-bold mb-2">{comment.name}</h3>
                         </div>
                         <p className="text-gray-700 mt-5 text-3xl">{comment.content}</p>
-                        <div className="ml-auto mt-2 w-max flex items-center ">
+                        <div className="ml-auto mt-5 w-max flex items-center ">
                             <Button variant={'link'}>
                                 Thích
                             </Button>
@@ -64,19 +61,15 @@ const CommentSection = ({idProduct}: { idProduct: string }) => {
                             <div key={index} className="ml-20 pl-5 border-solid border-l-2 border-gray-200">
                                 <div className="flex items-center gap-5">
                                     <div className="w-max h-max">
-                                        {reply.avatar ? (
-                                            <Image alt={''} className={'rounded-full'} src={ApiImage + reply.avatar}
-                                                   width={50} height={50}/>
-                                        ) : (
-                                            <Image alt={''} className={'rounded-full'}
-                                                   src={'/images/sections/avatar-user-review-2.jpg'} width={50}
-                                                   height={50}/>
-                                        )}
+                                        <Image
+                                            src={reply.avatar ? (reply.avatar.startsWith('https') ? (reply.avatar) : (ApiImage + reply.avatar)) : '/images/sections/avatar-user-review-2.jpg'}
+                                            className={'object-contain rounded-full'} alt={''}
+                                            width={50} height={50}/>
                                     </div>
                                     <h3 className="text-3xl capitalize font-bold mb-2">{reply.name}</h3>
                                 </div>
                                 <p className="text-gray-700 mt-5 text-3xl">{reply.content}</p>
-                                <div className="ml-auto mt-2 w-max flex items-center ">
+                                <div className="ml-auto mt-5 w-max flex items-center ">
                                     <Button variant={'link'}>
                                         Thích
                                     </Button>

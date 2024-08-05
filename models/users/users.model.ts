@@ -46,6 +46,15 @@ const UsersModel = {
     GetInformationFormGoogle() {
         const {trigger, isMutating, error} = useSWRMutation(GoogleApiUrl, FetchGetWithToken)
         return {trigger, isMutating, error}
+    },
+    GetUsersLimitPage(page: number, limit: number) {
+        const offset = (page - 1) * limit;
+        const {
+            trigger,
+            isMutating,
+            error
+        } = useSWRMutation(this.url + `?offset=${offset}&limit=${limit}&page=${page}`, FetchGetWithToken);
+        return {trigger, isMutating, error}
     }
 }
 
