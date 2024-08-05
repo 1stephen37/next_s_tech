@@ -15,6 +15,7 @@ function Page() {
     const dispatch = useAppDispatch();
     const user = useAppSelector(state => state.user.user);
 
+
     useEffect(() => {
         dispatch(getInitialFromLocalStorage());
     }, []);

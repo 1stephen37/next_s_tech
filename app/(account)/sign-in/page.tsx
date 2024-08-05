@@ -16,6 +16,8 @@ import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {useRouter} from "next/navigation";
 import Alert from "@/components/Alert";
 import {useGoogleLogin} from '@react-oauth/google';
+import {useAppDispatch, useAppSelector} from "@/redux/hooks";
+import {saveLinkToLocalStorage} from "@/redux/reducers/router.reducer";
 // import usePathHistory from "@/hooks/usePathHistory";
 
 type Inputs = {
@@ -86,9 +88,11 @@ function Page() {
             })
     };
     const [showPassword, setShowPassword] = useState(false);
+    const dispatch = useAppDispatch();
+    const previous = useAppSelector(state => state.router.link)
 
     useEffect(() => {
-        router.back();
+        dispatch(saveLinkToLocalStorage())
     }, []);
 
     return (

@@ -38,6 +38,7 @@ import {MdOutlineHistory} from "react-icons/md";
 import Confirm from "@/components/Confirm";
 import Alert from "@/components/Alert";
 import BrandsModel from "@/models/brands/brands.model";
+import {linkChange, saveLinkToLocalStorage} from "@/redux/reducers/router.reducer";
 
 const imagesBrands = [
     {
@@ -146,6 +147,11 @@ function MainHeader() {
 
     const handleLogOut = () => {
         setShowConfirmLogOut(true);
+    }
+
+    const handleSignIn = () => {
+        dispatch(linkChange(path))
+        dispatch(saveLinkToLocalStorage())
     }
 
     useEffect(() => {
@@ -317,7 +323,7 @@ function MainHeader() {
                             </DropdownMenu>
 
                         ) : (
-                            <Link href={'/sign-in'} className="flex gap-3 items-center">
+                            <Link href={'/sign-in'} onClick={handleSignIn} className="flex gap-3 items-center">
                                 <FaRegUser className="text-[2rem] cursor-pointer"/>
                                 <span className="text-[2rem]">Tài khoản</span>
                             </Link>
