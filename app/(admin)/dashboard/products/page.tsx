@@ -1,5 +1,5 @@
 'use client';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {
     DropdownMenu, DropdownMenuCheckboxItem,
@@ -16,39 +16,52 @@ import Image from "next/image";
 import {Badge} from "@/components/ui/badge";
 import ProductsModel from "@/models/products/products.model";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {ApiImage, ProductStatus, transformCurrency} from "@/app/constants";
+import {ApiImage, ProductStatus, transformCurrency, ProductStatusKey} from "@/app/constants";
 import {useRouter} from "next/navigation";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import Link from "next/link";
-import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import BrandsModel from "@/models/brands/brands.model";
 import {SubmitHandler, useForm} from "react-hook-form";
+import {useAppSelector} from "@/redux/hooks";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink, PaginationNext,
+    PaginationPrevious
+} from "@/components/ui/pagination";
 
-type ProductStatusKey = keyof typeof ProductStatus;
 
 type ProductCreate = {
     name: string,
     id_brand: string,
-    options: {
-        color: '',
-        price: '',
-        storage: '',
-        image: null,
-    }[]
+    image: null | File,
+    sale_off: number
 }
 
 function Page() {
+    const {trigger: createProduct} = ProductsModel.CreateProduct();
     const router = useRouter();
-    const [options, setOptions] = useState([
+    const user = useAppSelector(state => state.user.user);
+    const [options, setOptions] = useState<
+        {
+            color: string;
+            price: string;
+            storage: string;
+            quantity: number;
+            image: File | null;
+        }[]
+    >([
         {
             color: '',
             price: '',
             storage: '',
+            quantity: 0,
             image: null,
         },
     ]);
+
     const handleAddOption = () => {
         setOptions([
             ...options,
@@ -56,10 +69,31 @@ function Page() {
                 color: '',
                 price: '',
                 storage: '',
+                quantity: 0,
                 image: null,
             },
         ]);
     };
+
+    const handleUpdateOption = (index: number, type: string, value: string | File | null) => {
+        setOptions((prevOptions) =>
+            prevOptions.map((option, i) => {
+                if (i === index) {
+                    return {
+                        ...option,
+                        [type]: value,
+                    };
+                }
+                return option;
+            })
+        );
+    }
+
+    const handleRemoveOption = (index: number) => {
+        const newOptions = [...options];
+        newOptions.splice(index, 1);
+        setOptions(newOptions);
+    }
 
     const [technicalSpecifications, setTechnicalSpecifications] = useState([
         {
@@ -71,19 +105,112 @@ function Page() {
         },
     ]);
 
+    const handleAddDetailTechnicalSpecification = (index: number) => {
+        const temp = [...technicalSpecifications];
+        temp[index].details.push({
+            name: '',
+            value: '',
+        });
+        setTechnicalSpecifications(temp);
+    };
+
+    const handleAddTechnicalSpecification = () => {
+        setTechnicalSpecifications([
+            ...technicalSpecifications,
+            {
+                specificationCategory: '',
+                details: [{
+                    name: '',
+                    value: ''
+                }]
+            }
+        ])
+    }
+
+    const handleRemoveDetailTechnicalSpecification = (indexTechnicalSpecification: number, indexDetailTechnicalSpecification: number) => {
+        let temp = [...technicalSpecifications];
+        if (indexDetailTechnicalSpecification >= 1) {
+            temp[indexTechnicalSpecification].details.splice(indexDetailTechnicalSpecification, 1);
+            setTechnicalSpecifications(temp);
+        }
+    }
+
+    const handleUpdateTechnicalSpecificationsDetail = (
+        index: number,
+        indexDetail: number,
+        type: 'name' | 'value',
+        value: string
+    ) => {
+        setTechnicalSpecifications((prevSpec) => {
+            const newSpec = [...prevSpec];
+            newSpec[index] = {
+                ...newSpec[index],
+                details: newSpec[index].details.map((detail, i) => {
+                    if (i === indexDetail) {
+                        return {
+                            ...detail,
+                            [type]: value,
+                        };
+                    }
+                    return detail;
+                }),
+            };
+            return newSpec;
+        });
+    };
+
+    const handleUpdateTechnicalSpecificationsCategory = (
+        index: number,
+        value: string
+    ) => {
+        setTechnicalSpecifications((prevSpec) => {
+            const newSpec = [...prevSpec];
+            newSpec[index] = {
+                ...newSpec[index],
+                specificationCategory: value,
+            };
+            return newSpec;
+        });
+    };
+
+    const handleRemoveTechnicalSpecification = (index: number) => {
+        let temp = [...technicalSpecifications];
+        temp.splice(index, 1);
+        setTechnicalSpecifications(temp);
+    }
+
     const {register, handleSubmit, formState: {errors}}
         = useForm<ProductCreate>();
     const onSubmit: SubmitHandler<ProductCreate> = async (formData) => {
-        console.log(formData)
+        console.log(formData);
+        let newProduct = {
+            product: {...formData},
+            options,
+            technicalSpecifications
+        };
+        console.log(newProduct);
+        createProduct({token: user.accessToken, data: newProduct})
+            .then(res => {
+                console.log(res);
+            })
     };
 
-
+    const [countPage, setCountPage] = useState(0);
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(10);
     // const [idBrand, setIdBrand] = useState<number | undefined>(undefined);
     const {data: brands} = BrandsModel.GetAllBrands();
     const {data: products, paging: productPaging} = ProductsModel.GetProductsLimitByPage(page, limit);
     const [showFormAdd, setShowFormAdd] = useState(false);
+
+    const handleSwitchPage = (page: number) => {
+        setPage(page);
+        window.scrollTo(0, 0);
+    }
+
+    useEffect(() => {
+        setCountPage(productPaging?.total / limit)
+    }, [productPaging]);
 
     return (
         <>
@@ -93,11 +220,7 @@ function Page() {
                         <div className="flex items-center">
                             <TabsList>
                                 <TabsTrigger className={'text-3xl'} value="all">Tất cả</TabsTrigger>
-                                <TabsTrigger value="active">Active</TabsTrigger>
-                                <TabsTrigger value="draft">Draft</TabsTrigger>
-                                <TabsTrigger value="archived" className="hidden sm:flex">
-                                    Archived
-                                </TabsTrigger>
+                                <TabsTrigger className={'text-3xl'} value="active">Đang hoạt động</TabsTrigger>
                             </TabsList>
                             <div className="ml-auto flex items-center gap-2">
                                 <DropdownMenu>
@@ -221,9 +344,41 @@ function Page() {
                                     </Table>
                                 </CardContent>
                                 <CardFooter>
-                                    <div className="text-2xl text-muted-foreground">
-                                        Showing <strong>1-{limit}</strong> of <strong>{productPaging?.total}</strong>{" "}
-                                        products
+                                    <div className="flex w-full items-center justify-between ">
+                                        <div className="text-2xl w-max text-muted-foreground">
+                                            Hiển
+                                            thị <strong>1-{limit}</strong> trong <strong>{productPaging?.total}</strong>{" "}
+                                            sản phẩm
+                                        </div>
+                                        {countPage > 1 && (
+                                            <Pagination className={'mx-0 justify-end'}>
+                                                <PaginationContent>
+                                                    <PaginationItem>
+                                                        <PaginationPrevious className={'cursor-pointer select-none'}
+                                                                            onClick={() => {
+                                                                                if (page > 1) {
+                                                                                    setPage(page - 1);
+                                                                                }
+                                                                            }}/>
+                                                    </PaginationItem>
+                                                    {Array.from({length: countPage}, (_, i) => i + 1).map(index => (
+                                                        <PaginationItem key={index}>
+                                                            <PaginationLink className={'cursor-pointer select-none'}
+                                                                            onClick={() => handleSwitchPage(index)}
+                                                                            isActive={index === page}>{index}</PaginationLink>
+                                                        </PaginationItem>
+                                                    ))}
+                                                    <PaginationItem>
+                                                        <PaginationNext className={'cursor-pointer select-none'}
+                                                                        onClick={() => {
+                                                                            if ((page + 1) <= countPage) {
+                                                                                setPage(page + 1);
+                                                                            }
+                                                                        }}/>
+                                                    </PaginationItem>
+                                                </PaginationContent>
+                                            </Pagination>
+                                        )}
                                     </div>
                                 </CardFooter>
                             </Card>
@@ -245,23 +400,30 @@ function Page() {
                                         type='text'
                                         aria-invalid="true"
                                         placeholder="Nhập tên sản phẩm"
-                                        {...register('name')}
+                                        {...register('name', {required: 'Bạn phải nhập tên sản phẩm'})}
                                         className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                     />
                                 </div>
                                 <div className="grid gap-5">
-                                    <Label htmlFor="email" className="text-[2rem]">Thương hiệu</Label>
-                                    <Select {...register('id_brand', {required: "Bạn phải chọn một thương hiệu"})}>
-                                        <SelectTrigger className="w-[98%] mx-auto text-2xl">
-                                            <SelectValue placeholder="Thương hiệu"/>
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {brands && brands.map((brand, index) => (
-                                                <SelectItem key={index} className={'text-2xl'}
-                                                            value={brand.id_brand}>{brand.name}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <Label className="text-[2rem]">Giảm giá</Label>
+                                    <Input
+                                        type='text'
+                                        aria-invalid="true"
+                                        placeholder="Nhập giảm giá sản phẩm"
+                                        {...register('sale_off', {value: 0})}
+                                        className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid
+                                    text-2xl"
+                                    />
+                                </div>
+                                <div className="grid gap-5">
+                                    <Label className="text-[2rem]">Thương hiệu</Label>
+                                    <select className={'text-2xl capitalize px-5 py-2'}
+                                            {...register('id_brand')}>
+                                        {brands && brands.map((brand, index) => (
+                                            <option key={index} className={'text-2xl'}
+                                                    value={brand.id_brand}>{brand.name}</option>
+                                        ))}
+                                    </select>
                                     {errors.id_brand && <span
                                         className="text-[1.5rem] pl-1 text-destructive font-medium">{errors.id_brand.message}</span>}
                                 </div>
@@ -273,6 +435,8 @@ function Page() {
                                             id="file-input"
                                             className="sr-only peer"
                                             aria-invalid="true"
+                                            multiple={false}
+                                            {...register('image')}
                                         />
                                         <label
                                             htmlFor="file-input"
@@ -293,7 +457,8 @@ function Page() {
                                                 <Label className="text-[1.6rem]">Tùy
                                                     chọn {index + 1} {index === 0 ? '(bắt buộc)' : ''}</Label>
                                                 {index !== 0 && (
-                                                    <div className="text-2xl pr-5 cursor-pointer hover:underline">loại
+                                                    <div onClick={() => handleRemoveOption(index)}
+                                                         className="text-2xl pr-5 cursor-pointer hover:underline">loại
                                                         bỏ</div>
                                                 )}
                                             </div>
@@ -304,17 +469,27 @@ function Page() {
                                                     placeholder="Nhập màu, ví dụ: trắng"
                                                     className="focus:border-primary flex-1 border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                                     value={option.color}
-                                                    // onChange={(e) => handleOptionChange(index, 'color', e.target.value)}
+                                                    onChange={(e) => handleUpdateOption(index, 'color', e.target.value)}
                                                 />
                                             </div>
                                             <div className="flex items-center gap-5">
                                                 <Label className="text-[1.4rem] w-max">Giá:</Label>
-                                                <Input
-                                                    aria-invalid="true"
-                                                    placeholder="Nhập giá, ví dụ: 10000000"
-                                                    className="focus:border-primary flex-1 border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
-                                                    value={option.price}
-                                                    // onChange={(e) => handleOptionChange(index, 'price', e.target.value)}
+                                                <Input type={'number'}
+                                                       aria-invalid="true"
+                                                       placeholder="Nhập giá, ví dụ: 10000000"
+                                                       className="focus:border-primary flex-1 border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
+                                                       value={option.price}
+                                                       onChange={(e) => handleUpdateOption(index, 'price', e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="flex items-center gap-5">
+                                                <Label className="text-[1.4rem] w-max">Số lượng:</Label>
+                                                <Input type={'number'}
+                                                       aria-invalid="true"
+                                                       placeholder="Nhập số lượng, ví dụ: 500"
+                                                       className="focus:border-primary flex-1 border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
+                                                       value={option.quantity}
+                                                       onChange={(e) => handleUpdateOption(index, 'quantity', e.target.value)}
                                                 />
                                             </div>
                                             <div className="flex items-center gap-5">
@@ -324,7 +499,7 @@ function Page() {
                                                     placeholder="Nhập bộ nhớ trong, ví dụ: 4GB/64GB"
                                                     className="focus:border-primary flex-1 border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                                     value={option.storage}
-                                                    // onChange={(e) => handleOptionChange(index, 'storage', e.target.value)}
+                                                    onChange={(e) => handleUpdateOption(index, 'storage', e.target.value)}
                                                 />
                                             </div>
                                             <div className="flex items-center gap-5">
@@ -332,20 +507,26 @@ function Page() {
                                                 <Input
                                                     type="file"
                                                     aria-invalid="true"
+                                                    multiple={false}
                                                     placeholder="Nhập bộ nhớ trong, ví dụ: 4GB/64GB"
                                                     className="focus:border-primary flex-1 border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
-                                                    // onChange={(e) => handleOptionChange(index, 'image', e.target.files[0])}
+                                                    onChange={(e) => {
+                                                        if (e.target.files && e.target.files.length > 0) {
+                                                            handleUpdateOption(index, 'image', e.target.files[0]);
+                                                        }
+                                                    }}
                                                 />
                                             </div>
                                         </div>
                                     ))}
-                                    <Button variant={'ghost'} className={'text-[1.6rem]'} onClick={handleAddOption}>
+                                    <Button variant={'ghost'} type={'button'} className={'text-[1.6rem]'}
+                                            onClick={handleAddOption}>
                                         + Thêm tùy chọn
                                     </Button>
                                 </div>
                                 <div className="grid gap-5">
                                     <Label className="text-[2rem]">Các Thông số kĩ thuật của sản phẩm</Label>
-                                    <p className={'text-[1.2rem]'}>Lưu ý: không nhập Ram và Bộ nhớ trong vì đã nhập ở
+                                    <p className={'text-[1.4rem]'}>Lưu ý: không nhập Ram và Bộ nhớ trong vì đã nhập ở
                                         tùy chọn</p>
                                     {technicalSpecifications.map((specification, index) => (
                                         <div key={index} className="grid gap-5">
@@ -353,40 +534,54 @@ function Page() {
                                                 <Label className="text-[1.6rem] w-max">Danh mục kĩ thuật: </Label>
                                                 <Input
                                                     aria-invalid="true"
+                                                    value={specification.specificationCategory}
                                                     placeholder="Ví dụ: Màn hình, Bộ nhớ trong, ..."
                                                     className="focus:border-primary flex-1 border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
-                                                    // onChange={(e) => handleOptionChange(index, 'color', e.target.value)}
+                                                    onChange={(e) => handleUpdateTechnicalSpecificationsCategory(index, e.target.value)}
                                                 />
                                             </div>
-                                            {specification.details.map((detail, index) => (
-                                                <div key={index} className={'grid gap-5'}>
+                                            {specification.details.map((detail, indexDetail) => (
+                                                <div key={indexDetail} className={'grid gap-5'}>
                                                     <div className="flex items-center gap-5">
                                                         <Label className="text-[1.4rem] w-max">Tên thông số:</Label>
                                                         <Input
                                                             aria-invalid="true"
+                                                            value={detail.name}
                                                             placeholder="Ví dụ: Kích thước màn hình, ..."
                                                             className="focus:border-primary flex-1 border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
-                                                            // onChange={(e) => handleOptionChange(index, 'color', e.target.value)}
+                                                            onChange={(e) => handleUpdateTechnicalSpecificationsDetail(index, indexDetail, 'name', e.target.value)}
                                                         />
                                                     </div>
                                                     <div className="flex items-center gap-5">
                                                         <Label className="text-[1.4rem] w-max">Giá trị thông số:</Label>
                                                         <Input
                                                             aria-invalid="true"
+                                                            value={detail.value}
                                                             placeholder="Ví dụ: 6,1 inch, ..."
                                                             className="focus:border-primary flex-1 border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
-                                                            // onChange={(e) => handleOptionChange(index, 'color', e.target.value)}
+                                                            onChange={(e) => handleUpdateTechnicalSpecificationsDetail(index, indexDetail, 'value', e.target.value)}
                                                         />
                                                     </div>
-                                                    <Button variant={'ghost'} className={'text-[1.4rem]'}
-                                                            onClick={handleAddOption}>
-                                                        + Thêm thông số
+                                                    <Button type={'button'} variant={'ghost'}
+                                                            className={'text-[1.4rem]'}
+                                                            onClick={() => handleRemoveDetailTechnicalSpecification(index, indexDetail)}>
+                                                        - Xóa thông số
                                                     </Button>
                                                 </div>
                                             ))}
+                                            <Button type={'button'} variant={'ghost'}
+                                                    className={'text-[1.4rem]'}
+                                                    onClick={() => handleAddDetailTechnicalSpecification(index)}>
+                                                + Thêm thông số
+                                            </Button>
+                                            <Button variant={'ghost'} className={'text-[1.6rem]'}
+                                                    onClick={() => handleRemoveTechnicalSpecification(index)}>
+                                                - Xóa danh mục kĩ thuật
+                                            </Button>
                                         </div>
                                     ))}
-                                    <Button variant={'ghost'} className={'text-[1.6rem]'} onClick={handleAddOption}>
+                                    <Button variant={'ghost'} className={'text-[1.6rem]'}
+                                            onClick={handleAddTechnicalSpecification}>
                                         + Thêm danh mục kĩ thuật
                                     </Button>
                                 </div>

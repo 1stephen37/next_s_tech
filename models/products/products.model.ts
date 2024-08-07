@@ -1,4 +1,11 @@
-import {ApiUrl, FetchGet, FetchGetWithContinueUrl, FetchPost, tableName} from "@/app/constants";
+import {
+    ApiUrl,
+    FetchGet,
+    FetchGetWithContinueUrl,
+    FetchGetWithTokenAndDynamicIdUser,
+    FetchPost, FetchPostWithTokenFormData,
+    tableName
+} from "@/app/constants";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
@@ -89,6 +96,10 @@ const ProductsModel = {
             isError: error
         }
     },
+    CreateProduct() {
+        const {trigger, isMutating, error} = useSWRMutation(this.url + '/create', FetchPostWithTokenFormData)
+        return {trigger, isMutating, error}
+    }
 }
 
 export default ProductsModel

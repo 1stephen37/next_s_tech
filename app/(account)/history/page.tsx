@@ -5,9 +5,10 @@ import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import OrdersModel from "@/models/ỏders/orders.model";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks";
-import {transformCurrency} from "@/app/constants";
+import {OrderStatus, transformCurrency, OrderStatusKey} from "@/app/constants";
 import {getInitialFromLocalStorage} from "@/redux/reducers/user.reducer";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import {motion} from 'framer-motion';
 
 function Page() {
     const router = useRouter();
@@ -32,9 +33,9 @@ function Page() {
     }, [user]);
 
     return (
-        <section className={'w-max h-max '}>
+        <section className={'w-max h-max'}>
             <div
-                className="bg-white min-h-[40dvh] min-w-[40dvh] mx-auto w-max shadow-xl border border-solid px-10 rounded-md py-5 border-gray-300">
+                className="bg-white min-h-[40dvh] min-w-[40dvh] mx-auto w-max shadow-xl border border-solid px-5 rounded-md py-5 border-gray-300">
                 <Button size={'default'} onClick={() => router.push('/', {scroll: false})} variant='link'
                         className="text-2xl mb-3 text-gray-500">
                     Trở về trang chủ
@@ -43,8 +44,10 @@ function Page() {
                 <ScrollArea className="h-[55rem] mt-5">
                     <div className={'flex flex-col gap-5'}>
                         {orderHistory && orderHistory.length > 0 && orderHistory.map((order, index) => (
-                            <div key={index}
-                                 className="bg-white border border-gray-100 border-solid shadow-md rounded-lg p-6 space-y-4">
+                            <motion.div key={index}
+                                        whileHover={{scale: 1.02, boxShadow: '0.5px 0.5px 5px 2px rgba(0, 0, 0, 0.3)'}}
+                                        transition={{duration: 0.1}}
+                                        className="bg-white cursor-pointer border border-gray-200 border-solid shadow-md rounded-lg p-6 space-y-4">
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-[2rem] font-bold">Đơn hàng #ST-{order.id_order}</h2>
                                     <p className="text-gray-500 text-2xl">{order.created_at}</p>
@@ -66,6 +69,11 @@ function Page() {
 
                                 <div className="border-t pt-4 space-y-2">
                                     <p className="flex justify-between items-center">
+                                        <span className="font-medium text-[1.6rem]">Trạng thái của đơn hàng:</span>
+                                        <span
+                                            className="font-medium text-[1.4rem]">{OrderStatus[order.status as OrderStatusKey]}</span>
+                                    </p>
+                                    <p className="flex justify-between items-center">
                                         <span className="font-medium text-[1.6rem]">Tổng giá trị đơn hàng:</span>
                                         <span
                                             className="font-bold text-[1.4rem]">{transformCurrency(order.total)}</span>
@@ -76,8 +84,11 @@ function Page() {
                                             className="font-bold text-[1.4rem]">{transformCurrency(order.ship_fee)}</span>
                                     </p>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
+                        {orderHistory?.length === 0 && (
+                            <div className='text-2xl text-center'>Bạn chua đặt đơn hàng nào ở STECH</div>
+                        )}
                     </div>
                 </ScrollArea>
                 <Button onClick={() => router.push('/products')} className={'mx-auto py-[2rem]'}>Tiếp tục mua</Button>

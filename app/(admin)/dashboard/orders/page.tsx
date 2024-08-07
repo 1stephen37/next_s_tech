@@ -10,9 +10,7 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import Image from 'next/image';
-import {ApiImage, OrderStatus, transformCurrency} from "@/app/constants";
-
-type OrderStatusKey = keyof typeof OrderStatus;
+import {ApiImage, OrderStatus, transformCurrency, OrderStatusKey} from "@/app/constants";
 
 function Page() {
     const [limit, setLimit] = useState(5);
@@ -24,7 +22,6 @@ function Page() {
     useEffect(() => {
         orderTrigger({token: user.accessToken})
             .then((res) => {
-                console.log(res);
                 setOrders(res.data as Order[]);
             })
             .catch((err) => {
@@ -55,10 +52,10 @@ function Page() {
                                         Tổng tiền
                                     </TableHead>
                                     <TableHead className="hidden text-[2rem] text-center md:table-cell">
-                                        Giá
+                                        Số lượng sản phẩm
                                     </TableHead>
                                     <TableHead className="hidden text-[2rem] text-center md:table-cell">
-                                        Lượt xem
+                                        Phương thức thanh toán
                                     </TableHead>
                                     <TableHead className="text-[2rem] text-center">
                                         Hành động
@@ -91,10 +88,10 @@ function Page() {
                                             {transformCurrency(order.total)}
                                         </TableCell>
                                         <TableCell className="hidden text-2xl text-center md:table-cell">
-
+                                            {order.details?.reduce((total, item) => total += item.quantity, 0)}
                                         </TableCell>
                                         <TableCell className="hidden text-2xl text-center md:table-cell">
-
+                                            {order.payment_method}
                                         </TableCell>
                                         <TableCell>
                                             <DropdownMenu>

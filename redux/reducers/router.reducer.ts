@@ -10,10 +10,13 @@ const searchReducer = createSlice({
             state.link = action.payload;
         },
         saveLinkToLocalStorage: (state) => {
-            localStorage.setItem('router', state.link);
+            localStorage.setItem('router', JSON.stringify(state.link));
+        },
+        getLinkFromLocalStorage: (state) => {
+            state.link = JSON.parse(localStorage.getItem('router') as string);
         }
     }
 })
 
-export const {linkChange, saveLinkToLocalStorage} = searchReducer.actions
+export const {linkChange, saveLinkToLocalStorage, getLinkFromLocalStorage} = searchReducer.actions
 export default searchReducer.reducer

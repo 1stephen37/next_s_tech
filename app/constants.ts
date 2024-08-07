@@ -53,6 +53,25 @@ export const FetchGetWithTokenAndDynamicIdUser = async (url: string, {arg}: {
         .catch((err) => err.message)
 }
 
+export const FetchPostWithTokenFormData = async (url: string, {arg}: {
+    arg: { token: string, data: any }
+}) => {
+    const formData = new FormData();
+    for (let key in arg.data) {
+        formData.append(key, arg.data[key]);
+    }
+    console.log(JSON.stringify(formData));
+    return fetch(url, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "authorization": "Bearer " + arg.token
+        },
+        method: 'POST',
+        body: formData
+    }).then(res => res.json())
+        .catch((err) => err.message)
+}
+
 
 // export const FetchPost = async (url: string, { body } : {body : {}}) => fetch(url, {
 //     headers: {'Content-Type': 'application/json'},
@@ -68,6 +87,29 @@ export async function FetchPostWithToken(url: string, {arg}: { arg: { token: str
         },
         method: 'POST',
         body: JSON.stringify(arg.data),
+    }).then(res => res.json())
+        .catch((err) => err.message)
+}
+
+export async function FetchPatchWithTokenUpdate(url: string, {arg}: { arg: { token: string, data: any, id: string } }) {
+    return fetch(url + `/update/${arg.id}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            "authorization": "Bearer " + arg.token
+        },
+        method: 'PATCH',
+        body: JSON.stringify(arg.data),
+    }).then(res => res.json())
+        .catch((err) => err.message)
+}
+
+export async function FetchDeleteWithTokenDelete(url: string, {arg}: { arg: { token: string, id: string } }) {
+    return fetch(url + `/delete/${arg.id}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            "authorization": "Bearer " + arg.token
+        },
+        method: 'DELETE',
     }).then(res => res.json())
         .catch((err) => err.message)
 }
@@ -119,3 +161,11 @@ export const OrderStatus = {
     3: "Đã giao hàng",
     4: "Đã hủy",
 } as const;
+
+export type BrandStatusKey = keyof typeof BrandStatus;
+
+export type OrderStatusKey = keyof typeof OrderStatus;
+
+export type ProductStatusKey = keyof typeof ProductStatus;
+
+export type DeliveryStatusKey = keyof typeof DeliveryStatus;

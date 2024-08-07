@@ -6,7 +6,7 @@ import {FaSearch} from "react-icons/fa";
 import {LuShoppingCart} from "react-icons/lu";
 import TopHeader from "@/components/TopHeader";
 import {usePathname} from "next/navigation";
-import Logo from "@/components/logo";
+import Logo from "@/components/Logo";
 import {FaRegUser} from "react-icons/fa";
 import {
     NavigationMenu,
@@ -38,7 +38,7 @@ import {MdOutlineHistory} from "react-icons/md";
 import Confirm from "@/components/Confirm";
 import Alert from "@/components/Alert";
 import BrandsModel from "@/models/brands/brands.model";
-import {linkChange, saveLinkToLocalStorage} from "@/redux/reducers/router.reducer";
+import {getLinkFromLocalStorage, linkChange, saveLinkToLocalStorage} from "@/redux/reducers/router.reducer";
 
 const imagesBrands = [
     {
@@ -109,9 +109,11 @@ function MainHeader() {
     const isLogin = useAppSelector((state) => state.user.isLogin);
     const userInformation = useAppSelector((state) => state.user.user);
     const cart = useAppSelector((state) => state.cart.cart);
+    const previous = useAppSelector(state => state.router.link);
     useEffect(() => {
         dispatch(getInitialFromLocalStorage());
         dispatch(getCartFromLocalStorage());
+        dispatch(getLinkFromLocalStorage());
     }, []);
     useEffect(() => {
         if (cart.length > 0) {
@@ -146,6 +148,8 @@ function MainHeader() {
     }
 
     const handleLogOut = () => {
+        dispatch(linkChange(path))
+        dispatch(saveLinkToLocalStorage())
         setShowConfirmLogOut(true);
     }
 
@@ -160,8 +164,12 @@ function MainHeader() {
             setIsLogOut(false);
             setTimeout(() => {
                 setShowAlertLogOut(true);
-                router.push('/');
-            }, 800)
+                if (previous) {
+                    router.push(previous);
+                } else {
+                    router.push('/');
+                }
+            }, 500)
         }
     }, [isLogOut]);
 

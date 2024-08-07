@@ -169,10 +169,15 @@ function Page() {
                 )}
             </div>
             {countPage > 1 && (
-                <Pagination className="mt-[4rem]">
+                <Pagination className={'mt-[4rem]'}>
                     <PaginationContent>
                         <PaginationItem>
-                            <PaginationPrevious href="#"/>
+                            <PaginationPrevious className={'cursor-pointer select-none'}
+                                                onClick={() => {
+                                                    if (page > 1) {
+                                                        setPage(page - 1);
+                                                    }
+                                                }}/>
                         </PaginationItem>
                         {Array.from({length: countPage}, (_, i) => i + 1).map(index => (
                             <PaginationItem key={index}>
@@ -181,11 +186,13 @@ function Page() {
                                                 isActive={index === page}>{index}</PaginationLink>
                             </PaginationItem>
                         ))}
-                        {/*<PaginationItem>*/}
-                        {/*    <PaginationEllipsis/>*/}
-                        {/*</PaginationItem>*/}
                         <PaginationItem>
-                            <PaginationNext href="#"/>
+                            <PaginationNext className={'cursor-pointer select-none'}
+                                            onClick={() => {
+                                                if ((page + 1) <= countPage) {
+                                                    setPage(page + 1);
+                                                }
+                                            }}/>
                         </PaginationItem>
                     </PaginationContent>
                 </Pagination>

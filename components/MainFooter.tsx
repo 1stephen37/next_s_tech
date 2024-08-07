@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from "@/components/logo";
+import Logo from "@/components/Logo";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";

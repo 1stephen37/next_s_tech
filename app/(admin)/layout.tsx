@@ -1,7 +1,7 @@
 "use client";
 import React, {useEffect} from 'react';
 import {Button} from "@/components/ui/button";
-import Logo from "@/components/logo";
+import Logo from "@/components/Logo";
 import Link from 'next/link';
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {FaHome} from "react-icons/fa";

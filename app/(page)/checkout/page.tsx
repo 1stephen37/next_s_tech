@@ -4,7 +4,7 @@ import Heading from "@/components/sections/Heading";
 import {Button} from "@/components/ui/button";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks";
 import {getCartFromLocalStorage, resetCart} from "@/redux/reducers/cart.reducer";
-import {transformCurrency} from "@/app/constants";
+import {ApiImage, transformCurrency} from "@/app/constants";
 import DeliveriesModel from "@/models/deliveries/deliveries.model";
 import {
     Select,
@@ -17,10 +17,11 @@ import {Input} from "@/components/ui/input";
 import {Checkbox} from '@/components/ui/checkbox';
 import {SubmitHandler, useForm} from "react-hook-form";
 import VouchersModel from "@/models/vouchers/vouchers.model";
-import ShopModel from "@/models/shop/shop.model";
 import OrdersModel from "@/models/ỏders/orders.model";
 import {useRouter} from "next/navigation";
 import Alert from "@/components/Alert";
+import Image from 'next/image';
+import RelatedProducts from "@/components/RelatedProducts";
 
 type form = {
     name: string,
@@ -28,20 +29,19 @@ type form = {
     phone: string,
     address: string,
     receiverName?: string,
-    receiverEmail?: string,
-    receiverPhone?: string,
     receiverAddress?: string,
 }
 
 const PaymentInterface: React.FC = () => {
-        // const router = useRouter();
-        const {register, handleSubmit, formState: {errors}}
+        const router = useRouter();
+        const {register, handleSubmit, reset, formState: {errors}}
             = useForm<form>();
         const {trigger: triggerUser} = OrdersModel.CreateOrderWithUser();
         const {trigger: triggerGuest} = OrdersModel.CreateOrderWithGuest();
         const dispatch = useAppDispatch();
-        const [indexDelivery, setIndexDelivery] = useState(-1);
-        const [indexVoucher, setIndexVoucher] = useState(-1);
+        const [indexDelivery, setIndexDelivery] = useState(0);
+        const [indexVoucher, setIndexVoucher] = useState(0);
+        const [paymentMethod, setPaymentMethod] = useState('cod')
         const [amount, setAmount] = useState(0);
         const [errorMessage, setErrorMessage] = useState('');
         const [receiver, setReceiver] = useState(false);
@@ -55,6 +55,7 @@ const PaymentInterface: React.FC = () => {
 
         const cart = useAppSelector((state) => state.cart.cart);
         useEffect(() => {
+            reset();
             dispatch(getCartFromLocalStorage());
             if (typeof window !== 'undefined') {
                 setIsHydrated(true);
@@ -67,31 +68,27 @@ const PaymentInterface: React.FC = () => {
 
         useEffect(() => {
             handleTotalPriceOrder()
-        }, [indexVoucher, indexDelivery])
+        }, [indexVoucher, indexDelivery, deliveries, vouchersList])
 
         const getTotalPriceCart = () => {
             return cart.reduce((total, item) => total += item.salePrice * item.quantity, 0);
         }
 
         const handleTotalPriceOrder = () => {
-            if (indexDelivery !== -1 && indexVoucher !== -1) {
-                let cartTotal = getTotalPriceCart();
-                let deliveryFee = Math.floor((deliveries[indexDelivery].price * 10) / 1000) * 1000;
-                let totalPrice = Math.floor(((1 - (vouchersList[indexVoucher].discount / 100)) * cartTotal) / 1000) * 1000;
-                totalPrice += deliveryFee;
-                setTotal(totalPrice);
-            } else if (indexDelivery !== -1 && indexVoucher === -1) {
-                let cartTotal = getTotalPriceCart();
-                let deliveryFee = Math.floor((deliveries[indexDelivery].price * 10) / 1000) * 1000;
-                let totalPrice = Math.floor(cartTotal / 1000) * 1000;
-                totalPrice += deliveryFee;
-                setTotal(totalPrice);
-            } else if (vouchersList?.length === 0 && indexDelivery !== -1) {
-                let cartTotal = getTotalPriceCart();
-                let deliveryFee = Math.floor((deliveries[indexDelivery].price * 10) / 1000) * 1000;
-                let totalPrice = Math.floor(cartTotal / 1000) * 1000;
-                totalPrice += deliveryFee;
-                setTotal(totalPrice);
+            if (deliveries?.length > 0 && vouchersList?.length > 0) {
+                if (indexDelivery >= 0 && indexVoucher >= 0) {
+                    let cartTotal = getTotalPriceCart();
+                    let deliveryFee = Math.floor((deliveries[indexDelivery].price * 10) / 1000) * 1000;
+                    let totalPrice = Math.floor(((1 - (vouchersList[indexVoucher].discount / 100)) * cartTotal) / 1000) * 1000;
+                    totalPrice += deliveryFee;
+                    setTotal(totalPrice);
+                } else if (vouchersList?.length === 0 && indexDelivery >= 0) {
+                    let cartTotal = getTotalPriceCart();
+                    let deliveryFee = Math.floor((deliveries[indexDelivery].price * 10) / 1000) * 1000;
+                    let totalPrice = Math.floor(cartTotal / 1000) * 1000;
+                    totalPrice += deliveryFee;
+                    setTotal(totalPrice);
+                }
             }
         }
 
@@ -106,14 +103,14 @@ const PaymentInterface: React.FC = () => {
                     address: formData.address,
                     phone: formData.phone,
                     receiver_name: formData.receiverName,
-                    receiver_email: formData.receiverEmail,
-                    receiver_phone: formData.receiverPhone,
                     receiver_address: formData.receiverAddress,
                     status: 0,
                     total: total,
                     origin_total: getTotalPriceCart(),
                     distance: 10,
                     ship_fee: (Math.floor(deliveries[indexDelivery].price * 10 / 1000) * 1000),
+                    id_delivery: deliveries[indexDelivery].id_delivery,
+                    payment_method: paymentMethod
                 };
                 if (newOrder.order && vouchersList?.length > 0) {
                     if (indexVoucher !== -1) newOrder.order.code = vouchersList[indexVoucher].code;
@@ -139,6 +136,7 @@ const PaymentInterface: React.FC = () => {
                             if (res.message) {
                                 setShowSuccess(true);
                                 dispatch(resetCart());
+                                router.push('/history');
                             } else {
                                 setErrorMessage(res.error)
                             }
@@ -149,6 +147,7 @@ const PaymentInterface: React.FC = () => {
                             if (res.message) {
                                 setShowSuccess(true);
                                 dispatch(resetCart());
+                                router.push('/history');
                             } else {
                                 setErrorMessage(res.error)
                             }
@@ -165,10 +164,9 @@ const PaymentInterface: React.FC = () => {
                     <div className="mx-auto">
                         <Heading title={'Thanh Toán'}/>
                         <form onSubmit={handleSubmit(onSubmit)} className="flex gap-8 mt-5 justify-center">
-                            <div
-                                className={"bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 " + `${receiver ? 'w-[60%]' : 'w-[40%]'}`}>
+                            <div className={"bg-white shadow-md rounded px-8 pt-6 pb-8 mb-2 w-[40%]"}>
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                                    <h2 className="text-[2rem] font-bold text-gray-900 mb-4">
                                         Thông tin giao hàng
                                     </h2>
                                     <div
@@ -177,8 +175,8 @@ const PaymentInterface: React.FC = () => {
                                         <Checkbox onClick={() => setReceiver(!receiver)} className={'w-6 h-6 rounded'}/>
                                     </div>
                                 </div>
-                                <div className={`grid grid-cols-2 gap-10`}>
-                                    <div className={`${receiver ? '' : 'w-[30rem]'}`}>
+                                <div className={`flex flex-col gap-3`}>
+                                    <div>
                                         <div className="mb-5">
                                             <label
                                                 className="block text-gray-700 text-2xl font-bold mb-2"
@@ -187,7 +185,7 @@ const PaymentInterface: React.FC = () => {
                                                 Tên người đặt hàng
                                             </label>
                                             <Input id="mainName"
-                                                   placeholder="Nhập tên người đặt hàng"
+                                                   placeholder='Ví dụ: Nguyễn Văn A'
                                                    className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                                    {...register('name', {
                                                        required: "Bạn phải nhập tên nguời đặt hàng",
@@ -209,8 +207,8 @@ const PaymentInterface: React.FC = () => {
                                             <Input
                                                 className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                                 id="mainEmail"
+                                                placeholder='Ví dụ: tencuaban@gmail.com'
                                                 type="text"
-                                                placeholder="Nhập email người đặt"
                                                 {...register('email', {
                                                     required: "Bạn phải nhập email người đặt hàng",
                                                     value: user?.email || '',
@@ -237,8 +235,8 @@ const PaymentInterface: React.FC = () => {
                                             <Input
                                                 className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                                 id="mainPhone"
+                                                placeholder='Ví dụ: 0338015183'
                                                 type="number"
-                                                placeholder="Nhập số điện thoại người đặt"
                                                 {...register('phone', {
                                                     required: "Bạn phải nhập số điện thoại người đặt hàng",
                                                     value: user?.phone || '',
@@ -267,7 +265,7 @@ const PaymentInterface: React.FC = () => {
                                                 className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                                 id="mainAddress"
                                                 type="text"
-                                                placeholder="Nhập địa chỉ người đặt"
+                                                placeholder="Ví dụ: 995/8 Hồng Bàng, phường 12, quận 6, TP.Hồ Chí Minh"
                                                 {...register('address', {
                                                     required: "Bạn phải nhập địa chỉ người đặt hàng",
                                                     value: user?.address || ''
@@ -281,6 +279,9 @@ const PaymentInterface: React.FC = () => {
                                     </div>
                                     {receiver && (
                                         <div className="">
+                                            <h2 className="text-[1.8rem] font-bold text-gray-900 mb-4">
+                                                Thông tin người nhận hàng
+                                            </h2>
                                             <div className="mb-5">
                                                 <label
                                                     className="block text-gray-700 text-2xl font-bold mb-2"
@@ -292,7 +293,7 @@ const PaymentInterface: React.FC = () => {
                                                     className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                                     id="mainName"
                                                     type="text"
-                                                    placeholder="Nhập tên người nhận hàng"
+                                                    placeholder=""
                                                     {...register('receiverName', {
                                                         required: "Bạn phải nhập tên người nhận hàng",
                                                     })}
@@ -300,63 +301,6 @@ const PaymentInterface: React.FC = () => {
                                                 {errors.receiverName && (
                                                     <div
                                                         className={'text-2xl font-semibold mt-3 text-red-500'}>{errors.receiverName.message}</div>
-                                                )}
-                                            </div>
-                                            <div className="mb-5">
-                                                <label
-                                                    className="block text-gray-700 text-2xl font-bold mb-2"
-                                                    htmlFor="mainEmail"
-                                                >
-                                                    Email người nhận hàng
-                                                </label>
-                                                <Input
-                                                    className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
-                                                    id="mainEmail"
-                                                    type="text"
-                                                    placeholder="Nhập email người nhận"
-                                                    {...register('receiverEmail', {
-                                                        required: "Bạn phải nhập email người nhận hàng",
-                                                        validate: (data) => {
-                                                            if (data) {
-                                                                if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data))) {
-                                                                    return "Email phải đúng định dạng";
-                                                                }
-                                                            }
-                                                            return true;
-                                                        }
-                                                    })}
-                                                />
-                                                {errors.receiverEmail && (
-                                                    <div
-                                                        className={'text-2xl font-semibold mt-3 text-red-500'}>{errors.receiverEmail.message}</div>
-                                                )}
-                                            </div>
-                                            <div className="mb-5">
-                                                <label
-                                                    className="block text-gray-700 text-2xl font-bold mb-2"
-                                                    htmlFor="mainPhone"
-                                                >
-                                                    Số điện thoại người nhận hàng
-                                                </label>
-                                                <Input
-                                                    className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
-                                                    id="mainPhone"
-                                                    type="number"
-                                                    placeholder="Nhập số điện thoại người nhận"
-                                                    {...register('receiverPhone', {
-                                                        required: "Bạn phải nhập số điện thoại người nhận hàng",
-                                                        minLength: {
-                                                            value: 10,
-                                                            message: "Số điện thoại phải có 10 chữ số"
-                                                        }, maxLength: {
-                                                            value: 10,
-                                                            message: "Số điện thoại phải có 10 chữ số"
-                                                        }
-                                                    })}
-                                                />
-                                                {errors.receiverPhone && (
-                                                    <div
-                                                        className={'text-2xl font-semibold mt-3 text-red-500'}>{errors.receiverPhone.message}</div>
                                                 )}
                                             </div>
                                             <div className="mb-5">
@@ -370,7 +314,7 @@ const PaymentInterface: React.FC = () => {
                                                     className="focus:border-primary border h-[3.5rem] py-[.5rem] outline-0 border-solid text-2xl"
                                                     id="mainAddress"
                                                     type="text"
-                                                    placeholder="Nhập địa chỉ người nhận"
+                                                    placeholder=""
                                                     {...register('receiverAddress', {
                                                         required: "Bạn phải nhập địa chỉ người nhận hàng",
                                                     })}
@@ -384,7 +328,7 @@ const PaymentInterface: React.FC = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className="bg-white w-[40%] shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                            <div className="bg-white h-max w-[40%] shadow-md rounded px-8 pt-6 pb-8 mb-4">
                                 <h2 className="text-3xl font-bold text-gray-900 mb-4">
                                     Giỏ hàng
                                 </h2>
@@ -394,14 +338,18 @@ const PaymentInterface: React.FC = () => {
                                             key={item.id_product}
                                             className="py-4 flex justify-between items-center"
                                         >
-                                            <div>
-                                                <h3 className="text-[1.8rem] font-semibold">{item.name}</h3>
-                                                <p className="text-gray-800 text-[1.6rem]">
-                                                    Màu: {item.color} - Bộ nhớ trong: {item.memory}
-                                                </p>
-                                                <p className="text-gray-800 text-[1.6rem]">
-                                                    Giá: {transformCurrency(item.salePrice)}
-                                                </p>
+                                            <div className={'flex gap-5'}>
+                                                <Image alt={''} className={'object-contain'} src={ApiImage + item.image}
+                                                       width={50} height={50}/>
+                                                <div className="">
+                                                    <h3 className="text-[1.8rem] font-semibold">{item.name}</h3>
+                                                    <p className="text-gray-800 text-[1.6rem]">
+                                                        Màu: {item.color} - Bộ nhớ trong: {item.memory}
+                                                    </p>
+                                                    <p className="text-gray-800 text-[1.6rem]">
+                                                        Giá: {transformCurrency(item.salePrice)}
+                                                    </p>
+                                                </div>
                                             </div>
                                             <div className="text-gray-500t text-2xl">
                                                 Số lượng: {item.quantity}
@@ -414,23 +362,22 @@ const PaymentInterface: React.FC = () => {
                                         Tạm tính: {isHydrated && transformCurrency(getTotalPriceCart())}
                                     </p>
                                 </div>
-                                <div className="mt-10 mx-auto w-max">
-                                    <Select onValueChange={(value) => {
-                                        setErrorMessage('');
-                                        setIndexDelivery(parseInt(value))
-                                    }}>
-                                        <SelectTrigger className="w-max mx-auto text-2xl outline-none">
-                                            <SelectValue placeholder="Chọn đơn vị vận chuyển"/>
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {deliveries && deliveries.map((delivery, index) => (
-                                                <SelectItem value={index.toString()} key={index}>
-                                                    <div
-                                                        className={'text-[1.6rem]'}>{delivery.name} - {delivery.speed} - {transformCurrency(delivery.price)}</div>
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                <div className="mt-10 mx-auto w-max min-w-[37rem]">
+                                    <h2 className='text-2xl font-semibold'>Chọn đơn vị vận chuyển:</h2>
+                                    <select
+                                        className="w-max py-3 px-5 border border-solid border-gray-300 rounded-lg text-center mx-auto block mt-3 text-[1.6rem]"
+                                        onChange={(e) => {
+                                            setErrorMessage('');
+                                            setIndexDelivery(parseInt(e.target.value))
+                                        }}>
+                                        {deliveries && deliveries.map((delivery, index) => (
+                                            <option value={index.toString()}
+                                                    className={'text-[1.6rem] hover:bg-gray-300 block h-[3rem]'}
+                                                    key={index}>
+                                                {delivery.name} - {delivery.speed} - {transformCurrency(delivery.price)}
+                                            </option>
+                                        ))}
+                                    </select>
                                     {deliveries && indexDelivery !== -1 && (
                                         <div className="text-[1.6rem] mt-5">
                                             <b>Giá vận
@@ -439,24 +386,22 @@ const PaymentInterface: React.FC = () => {
                                         </div>
                                     )}
                                 </div>
-                                <div className="mt-10 mx-auto w-max">
+                                <div className="mt-5 mx-auto w-max max-w-[37rem]">
                                     {vouchersList && vouchersList.length > 0 ? (
-                                            <div>
-                                                <Select onValueChange={(value) => setIndexVoucher(parseInt(value))}>
-                                                    <SelectTrigger className="w-max mx-auto text-2xl outline-none">
-                                                        <SelectValue
-                                                            placeholder="Chọn mã giảm giá dành cho đơn hàng của bạn"/>
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {vouchersList.map((voucher, index) => (
-                                                            <SelectItem value={index.toString()} key={index}>
-                                                                <div
-                                                                    className={'text-[1.6rem]'}>Mã giảm
-                                                                    giá: {voucher.code} - {voucher.is_percent ? `giảm: ${voucher.discount}%` : `giảm ${transformCurrency(voucher.max_discount)}`}</div>
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
+                                            <>
+                                                <h2 className='text-2xl font-semibold'>Chọn đơn vị vận chuyển:</h2>
+                                                <select className="w-max py-3 px-5 border border-solid
+                                                 border-gray-300 rounded-lg text-center mx-auto block mt-3 text-[1.6rem]"
+                                                        onChange={(e) => setIndexVoucher(parseInt(e.target.value))}
+                                                >
+                                                    {vouchersList.map((voucher, index) => (
+                                                        <option className={'text-[1.6rem]'} value={index.toString()}
+                                                                key={index}>
+                                                            Mã giảm
+                                                            giá: {voucher.code} - {voucher.is_percent ? `giảm: ${voucher.discount}%` : `giảm ${transformCurrency(voucher.max_discount)}`}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                                 {vouchersList && indexVoucher !== -1 && (
                                                     <>
                                                         <div className="text-[1.6rem] mx-auto text-center mt-5">
@@ -464,19 +409,28 @@ const PaymentInterface: React.FC = () => {
                                                                 giá: </b>: {vouchersList[indexVoucher].discount}%
                                                             * {transformCurrency(getTotalPriceCart())} = {transformCurrency(Math.floor(((vouchersList[indexVoucher].discount / 100) * getTotalPriceCart()) / 1000) * 1000)}
                                                         </div>
-                                                        <p className={'text-xl w-[40rem] mx-auto'}>* Lưu ý: mã giảm giá chỉ
+                                                        <p className={'text-2xl w-[40rem] mx-auto'}>*Lưu ý: mã giảm giá chỉ
                                                             giảm giá
                                                             dựa trên giá trị giỏ hàng, không áp dụng
                                                             giảm phí vận chuyển</p>
                                                     </>
                                                 )}
-                                            </div>
+                                            </>
                                         )
                                         : (
                                             <div className={'text-2xl'}>
                                                 Đơn hàng của bạn không đủ điều kiện để áp dụng voucher
                                             </div>
                                         )}
+                                    <div className="mt-5 ">
+                                        <select onChange={(e) => setPaymentMethod(e.target.value)}
+                                                className="w-max py-3 px-5 border border-solid border-gray-300 rounded-lg text-center mx-auto block mt-3 text-[1.6rem]">
+                                            <option className={'text-[1.6rem]'} value="cod">Thanh toán khi nhận hàng
+                                            </option>
+                                            <option className={'text-[1.6rem]'} value="online">Thanh toán qua ngân hàng
+                                            </option>
+                                        </select>
+                                    </div>
                                     <div
                                         className="mt-5 text-[1.4rem] text-center font-semibold text-orange-600">{errorMessage}</div>
                                     <div className="mt-10 text-2xl text-center">
@@ -487,9 +441,10 @@ const PaymentInterface: React.FC = () => {
                                 </div>
                             </div>
                         </form>
-
                     </div>
+                    <RelatedProducts/>
                 </div>
+
                 <Alert showAlert={showSuccess} setShowAlert={setShowSuccess} message={'Đơn hàng của bạn đang được xử lý'}
                        subMessage={'Cảm ơn bạn đã tin tưởng và đặt hàng tại STECH, Chúng tôi sẽ xử lý đơn hàng và giao hàng đến bạn nhanh nhất có thể.'}/>
             </>

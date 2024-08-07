@@ -29,9 +29,13 @@ const OrdersModel = {
         return {trigger, isMutating, error}
     },
     GetHistoryOrdersByIdUser() {
-        const {trigger, isMutating, error} = useSWRMutation(this.url , FetchGetWithTokenAndDynamicIdUser)
+        const {trigger, isMutating, error} = useSWRMutation(this.url, FetchGetWithTokenAndDynamicIdUser)
         return {trigger, isMutating, error}
     },
+    UpdateOrderStatus() {
+        const {trigger, isMutating, error} = useSWRMutation(this.url, FetchGetWithTokenAndDynamicIdUser)
+        return {trigger, isMutating, error}
+    }
 }
 
 export default OrdersModel

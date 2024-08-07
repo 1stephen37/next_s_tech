@@ -17,6 +17,7 @@ import {addToCart, saveCartToLocalStorage} from "@/redux/reducers/cart.reducer";
 import {useRouter} from "next/navigation";
 // import Alert from "@/components/Alert";
 import toast, {Toaster} from "react-hot-toast";
+import RelatedProducts from "@/components/RelatedProducts";
 
 
 function Page({params}: { params: { id: string } }) {
@@ -303,6 +304,7 @@ function Page({params}: { params: { id: string } }) {
                                     tiết</Button>
                             </div>
                         </section>
+                        <RelatedProducts/>
                     </section>
                 </section>
                 <ZoomImage imageSrc={mainImageSrc} showZoomImage={showZoom} setShowZoomImage={setShowZoom}/>

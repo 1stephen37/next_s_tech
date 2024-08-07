@@ -117,6 +117,7 @@ interface Shop {
 }
 
 interface Order {
+    id_delivery?: string,
     id_order?: string,
     code?: string,
     name: string,
@@ -135,6 +136,7 @@ interface Order {
     distance: number,
     ship_fee: number,
     avatar?: string,
+    payment_method: string,
     details?: {
         id_product: string,
         origin_price: number,

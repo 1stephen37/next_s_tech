@@ -75,4 +75,13 @@ html {
     @apply text-[1.8rem] font-normal
 }
 
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+select:focus {
+    outline: none;
+}
 

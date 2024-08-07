@@ -4,15 +4,12 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Image from "next/image";
-import {ApiImage, BrandStatus} from "@/app/constants";
+import {ApiImage, BrandStatus, BrandStatusKey} from "@/app/constants";
 import {Badge} from "@/components/ui/badge";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import BrandsModel from "@/models/brands/brands.model";
-
-type BrandStatusKey = keyof typeof BrandStatus;
-
 
 function Page() {
     const [page, setPage] = useState(1);
