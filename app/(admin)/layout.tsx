@@ -107,7 +107,7 @@ function Layout({children}: { children: React.ReactElement }) {
         <div className="w-full h-screen py-5 px-10 flex min-h-screen bg-muted/40 relative">
             <div className="left-bar w-[15%]">
                 <Logo className="pl-10" href={'/dashboard'}/>
-                <p className="p pl-10 text-primary">Bring technology to everyone</p>
+                <p className="p pl-10 text-primary">Mang công nghệ tới mọi người</p>
                 <ScrollArea className="mt-[3rem] min-h-[60rem] h-[62dvh]">
                     <div className="flex flex-col gap-[1rem] h-max">
                         {links.map((link, index) => (
@@ -210,14 +210,8 @@ function Layout({children}: { children: React.ReactElement }) {
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <div className="relative ml-auto h-[4rem] flex-1 md:grow-0">
-                        <Search size={30}
-                                className="absolute cursor-pointer left-2.5 top-2.5 h-[2rem] w-[2rem] text-muted-foreground"/>
-                        <Input
-                            type="search"
-                            placeholder="Search..."
-                            className="w-full lg:h-[3.5rem] text-gray-600 text-3xl outline-0 rounded-lg bg-background pl-[3.5rem] md:w-[200px] lg:w-[400px]"
-                        />
+                    <div className="ml-auto">
+                        notification
                     </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

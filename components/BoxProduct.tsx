@@ -23,7 +23,7 @@ function BoxProduct({id, name, image, brand, price, sale, index, views, memory, 
 
     const router = useRouter()
     const handleDetailProduct = () => {
-        router.push(`products/${id}`);
+        router.push(`/products/${id}`);
     }
 
     return (

@@ -20,7 +20,6 @@ import {ApiImage, ProductStatus, transformCurrency, ProductStatusKey} from "@/ap
 import {useRouter} from "next/navigation";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-import Link from "next/link";
 import BrandsModel from "@/models/brands/brands.model";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {useAppSelector} from "@/redux/hooks";
@@ -197,7 +196,7 @@ function Page() {
 
     const [countPage, setCountPage] = useState(0);
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(10);
+    const limit = 7;
     // const [idBrand, setIdBrand] = useState<number | undefined>(undefined);
     const {data: brands} = BrandsModel.GetAllBrands();
     const {data: products, paging: productPaging} = ProductsModel.GetProductsLimitByPage(page, limit);
@@ -290,15 +289,20 @@ function Page() {
                                             {products && products.map((product, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell className="hidden sm:table-cell">
-                                                        <Image
-                                                            alt="Product image"
-                                                            className="aspect-square rounded-md object-cover"
-                                                            height="64"
-                                                            src={ApiImage + product.image}
-                                                            width="70"
-                                                        />
+                                                        <div className="relative w-[70px] h-[64px] aspect-square">
+                                                            <Image
+                                                                alt="Product image"
+                                                                className="rounded-md object-cover"
+                                                                priority={true}
+                                                                fill
+                                                                sizes={'100'}
+                                                                src={ApiImage + product.image}
+                                                            />
+                                                        </div>
                                                     </TableCell>
-                                                    <TableCell className="font-medium cursor-pointer text-2xl">
+                                                    <TableCell
+                                                        onClick={() => router.push('/dashboard/products/detail/' + product.id_product)}
+                                                        className="font-medium cursor-pointer text-2xl">
                                                         {product.name}
                                                     </TableCell>
                                                     <TableCell>
@@ -328,13 +332,11 @@ function Page() {
                                                                 </Button>
                                                             </DropdownMenuTrigger>
                                                             <DropdownMenuContent align="start">
-                                                                <DropdownMenuItem
+                                                                <DropdownMenuItem onClick={() => router.push('/dashboard/products/detail/' + product.id_product)}
                                                                     className={'text-2xl'}>Xem chi
                                                                     tiết</DropdownMenuItem>
                                                                 <DropdownMenuItem
                                                                     className={'text-2xl'}>Sửa</DropdownMenuItem>
-                                                                <DropdownMenuItem
-                                                                    className={'text-2xl'}>Delete</DropdownMenuItem>
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
                                                     </TableCell>
@@ -345,10 +347,9 @@ function Page() {
                                 </CardContent>
                                 <CardFooter>
                                     <div className="flex w-full items-center justify-between ">
-                                        <div className="text-2xl w-max text-muted-foreground">
+                                        <div className="text-2xl w-[20rem] text-muted-foreground">
                                             Hiển
-                                            thị <strong>1-{limit}</strong> trong <strong>{productPaging?.total}</strong>{" "}
-                                            sản phẩm
+                                            thị <b>{limit * page}/{productPaging?.total}</b>{" "}sản phẩm
                                         </div>
                                         {countPage > 1 && (
                                             <Pagination className={'mx-0 justify-end'}>
@@ -389,7 +390,7 @@ function Page() {
             {showFormAdd && (
                 <div onClick={() => setShowFormAdd(false)}
                      className="fixed left-0 z-50 top-0 bg-[rgba(0,0,0,0.7)] grid place-items-center w-full h-screen">
-                    <div className="bg-white rounded-2xl shadow-xl h-max px-10 py-5 w-[50rem]"
+                    <div className="bg-white rounded-2xl shadow-xl h-max px-10 py-5 w-[60rem]"
                          onClick={(e) => e.stopPropagation()}>
                         <div className="heading">Thêm sản phẩm</div>
                         <ScrollArea className={'h-[75rem] px-5'}>

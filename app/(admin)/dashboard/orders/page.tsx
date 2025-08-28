@@ -75,10 +75,9 @@ function Page() {
                                             />
                                         </TableCell>
                                         <TableCell className="font-normal text-2xl">
-                                            <p>Tên người đặt: {order.name}</p>
-                                            <p>Email người đặt: {order.email}</p>
+                                            <p>Tên: {order.name}</p>
+                                            <p>Email: {order.email}</p>
                                             <p>Số điện thoại người đặt: {order.phone}</p>
-                                            <p>Địa chỉ người đặt: {order.address}</p>
                                         </TableCell>
                                         <TableCell>
                                             <Badge className={'text-2xl mx-auto block w-max'}
@@ -93,28 +92,8 @@ function Page() {
                                         <TableCell className="hidden text-2xl text-center md:table-cell">
                                             {order.payment_method}
                                         </TableCell>
-                                        <TableCell>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        aria-haspopup="true"
-                                                        size="icon"
-                                                        variant="ghost"
-                                                        className={'mx-auto'}
-                                                    >
-                                                        <MoreHorizontal className="h-4 w-4"/>
-                                                        <span className="sr-only">Toggle menu</span>
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="start">
-                                                    <DropdownMenuItem
-                                                        className={'text-2xl'}>Xem chi tiết</DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        className={'text-2xl'}>Sửa</DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        className={'text-2xl'}>Delete</DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                                        <TableCell className={''}>
+                                            <Button className="mx-auto">Xem chi tiết</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}

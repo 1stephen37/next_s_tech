@@ -1,5 +1,4 @@
 import React from 'react';
-import {cn} from "@/lib/utils";
 import BoxProduct from "@/components/BoxProduct";
 import {Button} from "@/components/ui/button";
 import ProductsModel from "@/models/products/products.model";
