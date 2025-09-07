@@ -91,13 +91,66 @@ const links = [
         href: "/dashboard/orders",
         name: "đơn hàng",
         icon: <FaBox/>
-    }
+    },
+]
+
+const linksChildPage = [
+    {
+        href: "/dashboard",
+        name: "trang quản trị",
+    },
+    {
+        href: "/dashboard/brands",
+        name: "thương hiệu",
+    },
+    {
+        href: "/dashboard/products",
+        name: "sản phẩm",
+    },
+    {
+        href: "/dashboard/products/detail",
+        name: "Chi tiết sản phẩm",
+    },
+    {
+        href: "/dashboard/deliveries",
+        name: "vận chuyển",
+    },
+    {
+        href: "/dashboard/reviews",
+        name: "Bình luận",
+    },
+    {
+        href: "/dashboard/vouchers",
+        name: "mã giảm giá",
+    },
+    {
+        href: "/dashboard/users",
+        name: "người dùng",
+    },
+    {
+        href: "/dashboard/shop",
+        name: "Cửa hàng",
+    },
+    {
+        href: "/dashboard/orders",
+        name: "đơn hàng",
+    },
 ]
 
 function Layout({children}: { children: React.ReactElement }) {
-    const path = usePathname();
     const dispatch = useAppDispatch();
     const user = useAppSelector(state => state.user.user);
+
+    const currentPath = usePathname();
+    const basePath = currentPath?.split('/').slice(0, 3).join('/'); // Lấy 3 phần đầu: "/dashboard/categories"
+
+    const currentPageIndex = links.findIndex(link => link.href === basePath);
+
+    const trimmedPath = currentPath.replace(/\/\d+$/, '');
+    const path  = linksChildPage.find(link => trimmedPath.endsWith(link.href)) || {
+        name: 'Không tìm thấy trang',
+        href: '/'
+    };
 
     useEffect(() => {
         dispatch(getInitialFromLocalStorage());
@@ -112,7 +165,7 @@ function Layout({children}: { children: React.ReactElement }) {
                     <div className="flex flex-col gap-[1rem] h-max">
                         {links.map((link, index) => (
                             <Link key={index} className={`text-[2rem] capitalize flex w-max py-5 px-10
-                                 items-center gap-5 ${path === link.href ? 'bg-primary rounded-full text-secondary' : ''}`}
+                                 items-center gap-5 ${currentPageIndex === index ? 'bg-primary rounded-full text-secondary' : ''}`}
                                   href={link.href}>
                                 {link.icon}
                                 {link.name}
@@ -192,20 +245,20 @@ function Layout({children}: { children: React.ReactElement }) {
                             </nav>
                         </SheetContent>
                     </Sheet>
-                    <Breadcrumb className="hidden md:flex">
+                    <Breadcrumb className="hidden md:flex items-center">
                         <BreadcrumbList>
                             <BreadcrumbItem>
                                 <BreadcrumbLink asChild>
                                     <Link className="text-[2.4rem]" href="/dashboard">Trang quản trị</Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
-                            {path !== '/dashboard' && (
-                                <BreadcrumbSeparator/>
+                            {path.href !== '/dashboard' && (
+                                <BreadcrumbSeparator className={'text-[2.4rem]'}/>
                             )}
                             <BreadcrumbItem>
-                                {path !== '/dashboard' && path.split('/').length == 3 && (
+                                {path.href !== '/dashboard' && (
                                     <BreadcrumbPage
-                                        className="text-3xl capitalize cursor-pointer">{links.filter(link => link.href === path)[0].name}</BreadcrumbPage>
+                                        className="text-[2.4rem] capitalize font-medium cursor-pointer">{path.name}</BreadcrumbPage>
                                 )}
                             </BreadcrumbItem>
                         </BreadcrumbList>

@@ -162,6 +162,8 @@ export const OrderStatus = {
     4: "Đã hủy",
 } as const;
 
+export type UserRoleKey = keyof typeof UserRole;
+
 export type BrandStatusKey = keyof typeof BrandStatus;
 
 export type OrderStatusKey = keyof typeof OrderStatus;

@@ -8,8 +8,9 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import Image from "next/image";
-import {ApiImage} from "@/app/constants";
+import {ApiImage, UserRole, UserRoleKey} from "@/app/constants";
 import UsersModel from "@/models/users/users.model";
+import {Badge} from "@/components/ui/badge";
 
 function Page() {
     const user = useAppSelector(state => state.user.user)
@@ -78,17 +79,17 @@ function Page() {
                                             <p>Địa chỉ: {user.address}</p>
                                         </TableCell>
                                         <TableCell>
-                                            {/*<Badge className={'text-2xl mx-auto block w-max'}*/}
-                                            {/*       variant="outline">{ProductStatus[product.status as ProductStatusKey]}</Badge>*/}
+                                            <Badge className={'text-2xl mx-auto block w-max'}
+                                                   variant="outline">{UserRole[user.role as UserRoleKey]}</Badge>
                                         </TableCell>
                                         <TableCell className="md:table-cell text-center text-2xl">
-
+                                            <div className="">1</div>
                                         </TableCell>
                                         <TableCell className="hidden text-2xl text-center md:table-cell">
-
+                                            <div className="">1</div>
                                         </TableCell>
                                         <TableCell className="hidden text-2xl text-center md:table-cell">
-
+                                            <div className="">1</div>
                                         </TableCell>
                                         <TableCell>
                                             <DropdownMenu>

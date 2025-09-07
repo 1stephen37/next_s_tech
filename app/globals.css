@@ -71,6 +71,10 @@ html {
     @apply text-[3.2rem] font-semibold
 }
 
+.subHeading {
+    @apply text-[2.8rem] font-semibold
+}
+
 .p {
     @apply text-[1.8rem] font-normal
 }

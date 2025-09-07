@@ -143,10 +143,10 @@ function Page({params}: { params: { id: string } }) {
                                                 animate={{opacity: 1}}
                                                 transition={{duration: 2}}
                                                 key={index} className={`relative border border-solid border-gray-400 rounded-md shadow-md hover:border-orange-500
-                                                cursor-pointer h-[100px] w-[100px] ${indexImage === index ? 'border-orange-500' : ''}`}
+                                                cursor-pointer w-[100px] h-[100px] ${indexImage === index ? 'border-orange-500' : ''}`}
                                                 onClick={() => switchImage(index)}>
-                                                <Image fill
-                                                       className={'object-contain m-auto max-h-[90px] max-w-[85px]'}
+                                                <Image fill sizes={'100'}
+                                                       className={'object-contain m-auto'}
                                                        src={ApiImage + option.image} alt={''}/>
                                             </motion.div>
                                         ))}
@@ -159,11 +159,12 @@ function Page({params}: { params: { id: string } }) {
                                             transition={{duration: 2}}
                                             onClick={() => setShowZoom(true)}
                                 >
-                                    <Image
-                                        alt="ecommerce" width={380} height={400}
-                                        className="object-contain object-center
-                                             min-w-[38rem] max-h-[38rem] "
-                                        src={mainImageSrc}/>
+                                    <div className="relative w-[380px] h-[400px] min-w-[38rem] max-h-[38rem]">
+                                        <Image
+                                            alt="ecommerce" fill sizes={'100'}
+                                            className="object-contain object-center"
+                                            src={mainImageSrc}/>
+                                    </div>
                                     {data.sale_off !== 0 && (
                                         <div className="absolute top-0 right-0 text-[1.4rem] font-semibold text-secondary
                                             px-2 py-1 rounded bg-gradient-to-r from-orange-400 to-red-400">
@@ -249,35 +250,33 @@ function Page({params}: { params: { id: string } }) {
                                     {data.details?.map((details, index) => {
                                         if (index === 1) {
                                             return (
-                                                <>
-                                                    <div key={10} className="flex flex-col gap-5">
-                                                        <h1 className="font-medium text-[2rem]">RAM & lưu trữ</h1>
-                                                        <div className="grid grid-cols-1 gap-y-5">
-                                                            <div className="flex justify-between">
-                                                                <div className={`w-max min-w-[60%] py-2 
+                                                <div key={`key-detail-${index}`} className="flex flex-col gap-5">
+                                                    <h1 className="font-medium text-[2rem]">RAM & lưu trữ</h1>
+                                                    <div className="grid grid-cols-1 gap-y-5">
+                                                        <div className="flex justify-between">
+                                                            <div className={`w-max min-w-[60%] py-2 
                                                                     px-5 rounded-md ` + "bg-gray-100"}>Dung lượng RAM
-                                                                </div>
-                                                                <div className={`w-max min-w-[40%] py-2
-                                                                     px-5 rounded-md ` + "bg-gray-100"}>{data?.options[indexImage].memory.split('/')[0]}
-                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="grid grid-cols-1 gap-y-5">
-                                                            <div className="flex justify-between">
-                                                                <div className={`w-max min-w-[60%] py-2 
-                                                                    px-5 rounded-md `}>Bộ nhớ trong
-                                                                </div>
-                                                                <div className={`w-max min-w-[40%] py-2
-                                                                     px-5 rounded-md `}>{data?.options[indexImage].memory.split('/')[1]}
-                                                                </div>
+                                                            <div className={`w-max min-w-[40%] py-2
+                                                                     px-5 rounded-md ` + "bg-gray-100"}>{data?.options[indexImage].memory.split('/')[0]}
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </>
+                                                    <div className="grid grid-cols-1 gap-y-5">
+                                                        <div className="flex justify-between">
+                                                            <div className={`w-max min-w-[60%] py-2 
+                                                                    px-5 rounded-md `}>Bộ nhớ trong
+                                                            </div>
+                                                            <div className={`w-max min-w-[40%] py-2
+                                                                     px-5 rounded-md `}>{data?.options[indexImage].memory.split('/')[1]}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             )
                                         }
                                         return (
-                                            <div key={index} className="flex flex-col gap-5">
+                                            <div key={`key-detail-${index}`} className="flex flex-col gap-5">
                                                 <h1 className="font-medium text-[2rem]">{details.name}</h1>
                                                 <div className="grid grid-cols-1 gap-y-5">
                                                     {details.detail.map((detail, index) => {
