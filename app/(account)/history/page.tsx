@@ -3,7 +3,7 @@ import {useState, useEffect} from "react";
 import React from 'react';
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
-import OrdersModel from "@/models/ỏders/orders.model";
+import OrdersModel from "@/models/orders/orders.model";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks";
 import {OrderStatus, transformCurrency, OrderStatusKey} from "@/app/constants";
 import {getInitialFromLocalStorage} from "@/redux/reducers/user.reducer";

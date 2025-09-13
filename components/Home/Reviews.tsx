@@ -7,7 +7,7 @@ function Reviews() {
             <div className="">
                 <h2 className="heading mb-5">Đánh giá của người dùng</h2>
                 <div className="grid grid-cols-3 gap-12">
-                    <div className="bg-white rounded-lg shadow p-6">
+                    <div className="bg-white rounded-lg shadow-lg p-6">
                         <div className="flex items-center space-x-6 mb-6">
                             <div className="w-[5rem] h-[5rem] relative">
                                 <Image fill priority={false} src="/images/sections/avatar-user-review-1.jpg"
@@ -42,7 +42,7 @@ function Reviews() {
                             </svg>
                         </div>
                     </div>
-                    <div className="bg-white rounded-lg shadow p-6">
+                    <div className="bg-white rounded-lg shadow-lg p-6">
                         <div className="flex items-center space-x-6 mb-6">
                             <div className="w-[5rem] h-[5rem] relative">
                                 <Image fill priority={false} src="/images/sections/avatar-user-review-2.jpg"
@@ -77,7 +77,7 @@ function Reviews() {
                             </svg>
                         </div>
                     </div>
-                    <div className="bg-white rounded-lg shadow p-6">
+                    <div className="bg-white rounded-lg shadow-lg p-6">
                         <div className="flex items-center space-x-6 mb-6">
                             <div className="w-[5rem] h-[5rem] relative">
                                 <Image fill priority={false} src="/images/sections/avatar-user-review-3.jpg"

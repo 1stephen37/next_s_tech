@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import OrdersModel from "@/models/ỏders/orders.model";
+import OrdersModel from "@/models/orders/orders.model";
 import {useAppSelector} from "@/redux/hooks";
 import {Badge} from "@/components/ui/badge";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
@@ -13,7 +13,7 @@ import Image from 'next/image';
 import {ApiImage, OrderStatus, transformCurrency, OrderStatusKey} from "@/app/constants";
 
 function Page() {
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(20);
     const [page, setPage] = useState(1);
     const {trigger: orderTrigger} = OrdersModel.GetOrdersLimitPage(page, limit);
     const [orders, setOrders] = useState<Order[]>([])

@@ -209,32 +209,36 @@ function MainHeader() {
                                                 ))}
                                             </ul>
                                         </NavigationMenuLink>
-                                        <NavigationMenuLink className={'grid grid-cols-2'}>
-                                            <div className="">
-                                                <h1 className={`pl-10 text-2xl font-semibold`}>Các Hãng điện thoại phổ
-                                                    biến</h1>
-                                                <div className="flex flex-col gap-5 mt-5">
-                                                    <div className="grid grid-cols-2 gap-5">
-                                                        {brandsList && brandsList.map((brand, index) => (
-                                                            <Link key={index}
-                                                                  href={`/products?id_brand=${brand.id_brand}`}
-                                                                  className="cursor-pointer pl-10 capitalize text-2xl">
-                                                                {brand.name}
+                                        <NavigationMenuLink asChild>
+                                            <div className={'grid grid-cols-2'}>
+                                                <div className="">
+                                                    <h1 className={`pl-10 text-2xl font-semibold`}>Các Hãng điện thoại
+                                                        phổ
+                                                        biến</h1>
+                                                    <div className="flex flex-col gap-5 mt-5">
+                                                        <div className="grid grid-cols-2 gap-5">
+                                                            {brandsList && brandsList.map((brand, index) => (
+                                                                <Link key={index}
+                                                                      href={`/products?id_brand=${brand.id_brand}`}
+                                                                      className="cursor-pointer pl-10 capitalize text-2xl">
+                                                                    {brand.name}
+                                                                </Link>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="">
+                                                    <h1 className={`text-center text-2xl font-semibold`}>Các sản phẩm
+                                                        điện
+                                                        thoại Khuyến mãi</h1>
+                                                    <div className="flex flex-col gap-5 mt-5">
+                                                        {productsList && productsList.map((product, index) => (
+                                                            <Link key={index} className={'text-2xl'}
+                                                                  href={`/products/${product.id_product}`}>
+                                                                {product.name} - {product.sale_off}%
                                                             </Link>
                                                         ))}
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div className="">
-                                                <h1 className={`text-center text-2xl font-semibold`}>Các sản phẩm điện
-                                                    thoại Khuyến mãi</h1>
-                                                <div className="flex flex-col gap-5 mt-5">
-                                                    {productsList && productsList.map((product, index) => (
-                                                        <Link key={index} className={'text-2xl'}
-                                                              href={`/products/${product.id_product}`}>
-                                                            {product.name} - {product.sale_off}%
-                                                        </Link>
-                                                    ))}
                                                 </div>
                                             </div>
                                         </NavigationMenuLink>

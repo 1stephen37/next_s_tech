@@ -157,3 +157,15 @@ interface OrderDetail {
     quantity: number
 }
 
+interface Statistical {
+    totalRevenue: number,
+    sales: number,
+    orders: number,
+    activeNow: number,
+    compare: {
+        revenue: number,
+    //     "subscriptions": "+1801% from last month",
+    //     "sales": "+19% from last month",
+    //     "activeNow": "+201 since last hour"
+    }
+}

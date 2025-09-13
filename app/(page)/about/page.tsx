@@ -10,7 +10,7 @@ function Page() {
                 <div className="lg:grid lg:grid-cols-1 lg:gap-8">
                     <div>
                         <h2 className="heading font-extrabold">Về STECH</h2>
-                        <p className="mt-3 text-[1.6rem] text-gray-600">
+                        <p className="mt-3 p">
                             Chào mừng đến với <b>STECH</b> - điểm đến đáng tin cậy của bạn cho các sản phẩm điện thoại
                             thông minh. Tại STech, chúng tôi tự hào là một trong những nhà bán lẻ hàng đầu trong
                             ngành công nghệ di động, luôn nỗ lực để mang đến cho khách hàng những trải nghiệm mua
@@ -44,7 +44,7 @@ function Page() {
                                 <Image alt={''} width={450} height={550} className={'rounded w-[100rem]'}
                                        src={'/images/sections/sm.png'}/>
                             </div>
-                            <p className="mt-3 max-w-[70%] text-[1.6rem] text-gray-600">
+                            <p className="mt-3 max-w-[70%] p">
                                 Sứ mệnh của <b>STECH</b> là trở thành đối tác tin cậy số một của khách hàng khi họ
                                 tìm kiếm
                                 các thiết bị điện thoại thông minh chất lượng cao. Chúng tôi không ngừng nỗ lực để
@@ -85,8 +85,7 @@ function Page() {
                                           clipRule="evenodd"/>
                                 </svg>
                             </div>
-                            <p className="ml-3 text-[2rem] text-gray-500">Đội ngũ nhân viên chuyên nghiệp và thân
-                                thiện</p>
+                            <p className="ml-3 text-[2rem] text-gray-500">Đội ngũ nhân viên chuyên nghiệp</p>
                         </li>
                         <li className="flex items-center">
                             <div className="flex-shrink-0">

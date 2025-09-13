@@ -17,7 +17,7 @@ import {Input} from "@/components/ui/input";
 import {Checkbox} from '@/components/ui/checkbox';
 import {SubmitHandler, useForm} from "react-hook-form";
 import VouchersModel from "@/models/vouchers/vouchers.model";
-import OrdersModel from "@/models/ỏders/orders.model";
+import OrdersModel from "@/models/orders/orders.model";
 import {useRouter} from "next/navigation";
 import Alert from "@/components/Alert";
 import Image from 'next/image';
