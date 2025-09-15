@@ -25,10 +25,11 @@ const BrandsModel = {
     },
     GetBrandsLimitPage(page: number, limit: number) {
         const offset = (page - 1) * limit;
-        const {data: brands, error, isLoading}: { data: { data: Brand[] }, error: Error | any, isLoading: boolean } =
+        const {data: brands, error, isLoading}: { data: { data: Brand[], paging: Paging }, error: Error | any, isLoading: boolean } =
             useSWR(this.url + `?offset=${offset}&limit=${limit}&page=${page}&role=admin`, FetchGet);
         return {
             data: brands?.data,
+            paging: brands?.paging,
             isLoading,
             isError: error
         }

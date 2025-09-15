@@ -11,10 +11,19 @@ import Image from "next/image";
 import {ApiImage, UserRole, UserRoleKey} from "@/app/constants";
 import UsersModel from "@/models/users/users.model";
 import {Badge} from "@/components/ui/badge";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink, PaginationNext,
+    PaginationPrevious
+} from "@/components/ui/pagination";
 
 function Page() {
     const user = useAppSelector(state => state.user.user)
-    const [limit, setLimit] = useState(5);
+    const limit = 5;
+    const [countPage, setCountPage] = useState(0);
+    const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
     const [users, setUsers] = useState<User[]>([])
     const {trigger: userTrigger} = UsersModel.GetUsersLimitPage(page, limit);
@@ -23,9 +32,16 @@ function Page() {
         userTrigger({token: user.accessToken})
             .then((res) => {
                 setUsers(res.data as User[]);
+                setTotal(res.paging.total);
+                setCountPage(Math.ceil(res.paging.total / limit));
                 console.log(res.data);
             })
     }, []);
+
+    const handleSwitchPage = (index: number) => {
+        setPage(index);
+        window.scrollTo(0, 90);
+    }
 
     return (
         <ScrollArea className="w-full h-full">
@@ -122,9 +138,37 @@ function Page() {
                     </CardContent>
                     <CardFooter>
                         <div className="text-2xl text-muted-foreground">
-                            {/*/Showing <strong>1-{limit}</strong> of <strong>{productPaging?.total}</strong>{" "}*/}
-                            Hiển thị {limit} trên 40 người dùng
+                            Hiển thị {limit} trên {total} người dùng
                         </div>
+                        {countPage > 1 && (
+                            <Pagination className={'mx-0 justify-end'}>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious className={'cursor-pointer select-none'}
+                                                            onClick={() => {
+                                                                if (page > 1) {
+                                                                    setPage(page - 1);
+                                                                }
+                                                            }}/>
+                                    </PaginationItem>
+                                    {Array.from({length: countPage}, (_, i) => i + 1).map(index => (
+                                        <PaginationItem key={index}>
+                                            <PaginationLink className={'cursor-pointer select-none'}
+                                                            onClick={() => handleSwitchPage(index)}
+                                                            isActive={index === page}>{index}</PaginationLink>
+                                        </PaginationItem>
+                                    ))}
+                                    <PaginationItem>
+                                        <PaginationNext className={'cursor-pointer select-none'}
+                                                        onClick={() => {
+                                                            if ((page + 1) <= countPage) {
+                                                                setPage(page + 1);
+                                                            }
+                                                        }}/>
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+                        )}
                     </CardFooter>
                 </Card>
             </section>

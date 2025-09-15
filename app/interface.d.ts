@@ -1,3 +1,7 @@
+interface Paging {
+    total: number
+}
+
 interface Brand {
     id_brand: string;
     name: string;
@@ -164,8 +168,8 @@ interface Statistical {
     activeNow: number,
     compare: {
         revenue: number,
-    //     "subscriptions": "+1801% from last month",
-    //     "sales": "+19% from last month",
-    //     "activeNow": "+201 since last hour"
+        //     "subscriptions": "+1801% from last month",
+        //     "sales": "+19% from last month",
+        //     "activeNow": "+201 since last hour"
     }
 }

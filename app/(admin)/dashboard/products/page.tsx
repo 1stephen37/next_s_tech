@@ -1,6 +1,5 @@
 'use client';
 import React, {useEffect, useState} from 'react';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {
     DropdownMenu, DropdownMenuCheckboxItem,
     DropdownMenuContent, DropdownMenuItem,
@@ -215,176 +214,163 @@ function Page() {
         <>
             <ScrollArea className="w-full h-full">
                 <section className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-                    <Tabs defaultValue="all">
-                        <div className="flex items-center">
-                            <TabsList>
-                                <TabsTrigger className={'text-3xl'} value="all">Tất cả</TabsTrigger>
-                                <TabsTrigger className={'text-3xl'} value="active">Đang hoạt động</TabsTrigger>
-                            </TabsList>
-                            <div className="ml-auto flex items-center gap-2">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" size="sm" className="h-8 py-[2rem] gap-1">
-                                            <ListFilter className="w-[2rem] h-[2rem]"/>
-                                            <span
-                                                className="sr-only text-[2rem] sm:not-sr-only sm:whitespace-nowrap">Bộ lọc</span>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel className={'text-[1.4rem]'}>TIêu chí</DropdownMenuLabel>
-                                        <DropdownMenuSeparator/>
-                                        <DropdownMenuCheckboxItem className={'text-2xl'} checked>
-                                            Đang bán
-                                        </DropdownMenuCheckboxItem>
-                                        <DropdownMenuCheckboxItem
-                                            className={'text-2xl'}>Draft</DropdownMenuCheckboxItem>
-                                        <DropdownMenuCheckboxItem className={'text-2xl'}>
-                                            Archived
-                                        </DropdownMenuCheckboxItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                                <Button size="sm" variant="outline" className="h-8 py-[2rem] gap-1">
-                                    <File className="h-[2rem] w-[2rem]"/>
-                                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Xuất File</span>
-                                </Button>
-                                <Button size='lg' onClick={() => setShowFormAdd(true)}
-                                        className="h-8 py-[2rem] gap-1">
-                                    <PlusCircle className="h-[2rem] w-[2rem]"/>
-                                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Thêm sản phẩm</span>
-                                </Button>
-                            </div>
+                    <div className="flex items-center">
+                        <div className="ml-auto flex items-center gap-2">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="sm" className="h-8 py-[2rem] gap-1">
+                                        <ListFilter className="w-[2rem] h-[2rem]"/>
+                                        <span
+                                            className="sr-only text-[2rem] sm:not-sr-only sm:whitespace-nowrap">Bộ lọc</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel className={'text-[1.4rem]'}>TIêu chí</DropdownMenuLabel>
+                                    <DropdownMenuSeparator/>
+                                    <DropdownMenuCheckboxItem className={'text-2xl'} checked>
+                                        Đang bán
+                                    </DropdownMenuCheckboxItem>
+                                    <DropdownMenuCheckboxItem
+                                        className={'text-2xl'}>Draft</DropdownMenuCheckboxItem>
+                                    <DropdownMenuCheckboxItem className={'text-2xl'}>
+                                        Ngưng bán
+                                    </DropdownMenuCheckboxItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            <Button size="sm" variant="outline" className="h-8 py-[2rem] gap-1">
+                                <File className="h-[2rem] w-[2rem]"/>
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Xuất File</span>
+                            </Button>
+                            <Button size='lg' onClick={() => setShowFormAdd(true)}
+                                    className="h-8 py-[2rem] gap-1">
+                                <PlusCircle className="h-[2rem] w-[2rem]"/>
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Thêm sản phẩm</span>
+                            </Button>
                         </div>
-                        <TabsContent value="all">
-                            <Card x-chunk="dashboard-06-chunk-0">
-                                <CardHeader>
-                                    <CardTitle className={'text-[2rem]'}>Sản phẩm</CardTitle>
-                                    <CardDescription className={'text-[1.6rem]'}>
-                                        Quản lý sản phẩm
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead className="hidden w-[100px] sm:table-cell">
-                                                    <span className="sr-only">Image</span>
-                                                </TableHead>
-                                                <TableHead className={'text-[2rem]'}>Thông tin sản phẩm</TableHead>
-                                                <TableHead className={'text-[2rem] text-center'}>Trạng thái</TableHead>
-                                                <TableHead className="hidden text-[2rem] text-center md:table-cell">
-                                                    Giá
-                                                </TableHead>
-                                                <TableHead className="hidden text-[2rem] text-center md:table-cell">
-                                                    Giảm giá
-                                                </TableHead>
-                                                <TableHead className="hidden text-[2rem] text-center md:table-cell">
-                                                    Lượt xem
-                                                </TableHead>
-                                                <TableHead className="text-[2rem] text-center">
-                                                    Hành động
-                                                </TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {products && products.map((product, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        <div className="relative w-[70px] h-[64px] aspect-square">
-                                                            <Image
-                                                                alt="Product image"
-                                                                className="rounded-md object-cover"
-                                                                priority={true}
-                                                                fill
-                                                                sizes={'100'}
-                                                                src={ApiImage + product.image}
-                                                            />
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell
-                                                        onClick={() => router.push('/dashboard/products/detail/' + product.id_product)}
-                                                        className="font-medium cursor-pointer text-2xl">
-                                                        {product.name}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Badge className={'text-2xl cursor-pointer mx-auto block w-max'}
-                                                               variant="outline">{ProductStatus[product.status as ProductStatusKey]}</Badge>
-                                                    </TableCell>
-                                                    <TableCell className="md:table-cell text-center text-2xl">
-                                                        {transformCurrency(product.price)}
-                                                    </TableCell>
-                                                    <TableCell className="hidden text-2xl text-center md:table-cell">
-                                                        {product.sale_off}%
-                                                    </TableCell>
-                                                    <TableCell className="hidden text-2xl text-center md:table-cell">
-                                                        {product.views}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <DropdownMenu>
-                                                            <DropdownMenuTrigger asChild>
-                                                                <Button
-                                                                    aria-haspopup="true"
-                                                                    size="icon"
-                                                                    variant="ghost"
-                                                                    className={'mx-auto'}
-                                                                >
-                                                                    <MoreHorizontal className="h-4 w-4"/>
-                                                                    <span className="sr-only">Toggle menu</span>
-                                                                </Button>
-                                                            </DropdownMenuTrigger>
-                                                            <DropdownMenuContent align="start">
-                                                                <DropdownMenuItem onClick={() => router.push('/dashboard/products/detail/' + product.id_product)}
-                                                                    className={'text-2xl'}>Xem chi
-                                                                    tiết</DropdownMenuItem>
-                                                                <DropdownMenuItem
-                                                                    className={'text-2xl'}>Sửa</DropdownMenuItem>
-                                                            </DropdownMenuContent>
-                                                        </DropdownMenu>
-                                                    </TableCell>
-                                                </TableRow>
+                    </div>
+                    <Card x-chunk="dashboard-06-chunk-0">
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="hidden w-[100px] sm:table-cell">
+                                            <span className="sr-only">Image</span>
+                                        </TableHead>
+                                        <TableHead className={'text-[2rem]'}>Thông tin sản phẩm</TableHead>
+                                        <TableHead className={'text-[2rem] text-center'}>Trạng thái</TableHead>
+                                        <TableHead className="hidden text-[2rem] text-center md:table-cell">
+                                            Giá
+                                        </TableHead>
+                                        <TableHead className="hidden text-[2rem] text-center md:table-cell">
+                                            Giảm giá
+                                        </TableHead>
+                                        <TableHead className="hidden text-[2rem] text-center md:table-cell">
+                                            Lượt xem
+                                        </TableHead>
+                                        <TableHead className="text-[2rem] text-center">
+                                            Hành động
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {products && products.map((product, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell className="hidden sm:table-cell">
+                                                <div className="relative w-[70px] h-[64px] aspect-square">
+                                                    <Image
+                                                        alt="Product image"
+                                                        className="rounded-md object-cover"
+                                                        priority={true}
+                                                        fill
+                                                        sizes={'100'}
+                                                        src={ApiImage + product.image}
+                                                    />
+                                                </div>
+                                            </TableCell>
+                                            <TableCell
+                                                onClick={() => router.push('/dashboard/products/detail/' + product.id_product)}
+                                                className="font-medium cursor-pointer text-2xl">
+                                                {product.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge className={'text-2xl cursor-pointer mx-auto block w-max'}
+                                                       variant="outline">{ProductStatus[product.status as ProductStatusKey]}</Badge>
+                                            </TableCell>
+                                            <TableCell className="md:table-cell text-center text-2xl">
+                                                {transformCurrency(product.price)}
+                                            </TableCell>
+                                            <TableCell className="hidden text-2xl text-center md:table-cell">
+                                                {product.sale_off}%
+                                            </TableCell>
+                                            <TableCell className="hidden text-2xl text-center md:table-cell">
+                                                {product.views}
+                                            </TableCell>
+                                            <TableCell>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button
+                                                            aria-haspopup="true"
+                                                            size="icon"
+                                                            variant="ghost"
+                                                            className={'mx-auto'}
+                                                        >
+                                                            <MoreHorizontal className="h-4 w-4"/>
+                                                            <span className="sr-only">Toggle menu</span>
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="start">
+                                                        <DropdownMenuItem
+                                                            onClick={() => router.push('/dashboard/products/detail/' + product.id_product)}
+                                                            className={'text-2xl'}>Xem chi
+                                                            tiết</DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            className={'text-2xl'}>Sửa</DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                        <CardFooter>
+                            <div className="flex w-full items-center justify-between ">
+                                <div className="text-2xl w-[25rem] text-muted-foreground">
+                                    Hiển
+                                    thị <b>{limit * page} trên {productPaging?.total}</b>{" "}sản phẩm
+                                </div>
+                                {countPage > 1 && (
+                                    <Pagination className={'mx-0 justify-end'}>
+                                        <PaginationContent>
+                                            <PaginationItem>
+                                                <PaginationPrevious className={'cursor-pointer select-none'}
+                                                                    onClick={() => {
+                                                                        if (page > 1) {
+                                                                            setPage(page - 1);
+                                                                        }
+                                                                    }}/>
+                                            </PaginationItem>
+                                            {Array.from({length: countPage}, (_, i) => i + 1).map(index => (
+                                                <PaginationItem key={index}>
+                                                    <PaginationLink className={'cursor-pointer select-none'}
+                                                                    onClick={() => handleSwitchPage(index)}
+                                                                    isActive={index === page}>{index}</PaginationLink>
+                                                </PaginationItem>
                                             ))}
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                                <CardFooter>
-                                    <div className="flex w-full items-center justify-between ">
-                                        <div className="text-2xl w-[20rem] text-muted-foreground">
-                                            Hiển
-                                            thị <b>{limit * page}/{productPaging?.total}</b>{" "}sản phẩm
-                                        </div>
-                                        {countPage > 1 && (
-                                            <Pagination className={'mx-0 justify-end'}>
-                                                <PaginationContent>
-                                                    <PaginationItem>
-                                                        <PaginationPrevious className={'cursor-pointer select-none'}
-                                                                            onClick={() => {
-                                                                                if (page > 1) {
-                                                                                    setPage(page - 1);
-                                                                                }
-                                                                            }}/>
-                                                    </PaginationItem>
-                                                    {Array.from({length: countPage}, (_, i) => i + 1).map(index => (
-                                                        <PaginationItem key={index}>
-                                                            <PaginationLink className={'cursor-pointer select-none'}
-                                                                            onClick={() => handleSwitchPage(index)}
-                                                                            isActive={index === page}>{index}</PaginationLink>
-                                                        </PaginationItem>
-                                                    ))}
-                                                    <PaginationItem>
-                                                        <PaginationNext className={'cursor-pointer select-none'}
-                                                                        onClick={() => {
-                                                                            if ((page + 1) <= countPage) {
-                                                                                setPage(page + 1);
-                                                                            }
-                                                                        }}/>
-                                                    </PaginationItem>
-                                                </PaginationContent>
-                                            </Pagination>
-                                        )}
-                                    </div>
-                                </CardFooter>
-                            </Card>
-                        </TabsContent>
-                    </Tabs>
+                                            <PaginationItem>
+                                                <PaginationNext className={'cursor-pointer select-none'}
+                                                                onClick={() => {
+                                                                    if ((page + 1) <= countPage) {
+                                                                        setPage(page + 1);
+                                                                    }
+                                                                }}/>
+                                            </PaginationItem>
+                                        </PaginationContent>
+                                    </Pagination>
+                                )}
+                            </div>
+                        </CardFooter>
+                    </Card>
                 </section>
             </ScrollArea>
             {showFormAdd && (

@@ -36,7 +36,7 @@ function Page() {
     const id_brand = searchParams.get('id_brand');
     const search = useAppSelector((state) => state.search.searchContent);
     const [page, setPage] = useState(1);
-    const {data: Brands, isLoading, isError} = BrandsModel.GetAllBrands();
+    const {data: Brands, isLoading} = BrandsModel.GetAllBrands();
     const [idBrand, setIdBrand] = useState('');
     const {
         data: productsList,
@@ -197,7 +197,6 @@ function Page() {
                     </PaginationContent>
                 </Pagination>
             )}
-
         </section>
     );
 }

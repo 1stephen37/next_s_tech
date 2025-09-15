@@ -49,9 +49,8 @@ const ProductsModel = {
         const offset = (page - 1) * limit;
         const {data: products, error, isLoading}: {
             data: {
-                data: ProductBox[], paging: {
-                    total: number
-                }
+                data: ProductBox[],
+                paging: Paging,
             },
             error: Error | any,
             isLoading: boolean

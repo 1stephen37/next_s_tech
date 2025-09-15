@@ -75,6 +75,10 @@ html {
     @apply text-[2.8rem] font-semibold
 }
 
+.tableHeading {
+    @apply text-[2rem] text-center font-bold
+}
+
 .p {
     @apply text-[1.8rem] font-normal
 }

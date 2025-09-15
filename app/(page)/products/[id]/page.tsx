@@ -19,7 +19,6 @@ import {useRouter} from "next/navigation";
 import toast, {Toaster} from "react-hot-toast";
 import RelatedProducts from "@/components/RelatedProducts";
 
-
 function Page({params}: { params: { id: string } }) {
     const router = useRouter();
     const limitDetail = 1;

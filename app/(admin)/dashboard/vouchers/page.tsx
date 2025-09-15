@@ -12,9 +12,11 @@ import DeliveriesModel from "@/models/deliveries/deliveries.model";
 import VouchersModel from "@/models/vouchers/vouchers.model";
 
 function Page() {
-    const [limit, setLimit] = useState(4);
+    const limit = 4;
     const [page, setPage] = useState(1);
-    const {data: Voucher} = VouchersModel.GetVouchersLimitPage(page, limit);
+    const {data: vouchers} = VouchersModel.GetVouchersLimitPage(page, limit);
+
+    console.log(vouchers);
 
     return (
         <ScrollArea className="w-full h-full">
@@ -44,7 +46,7 @@ function Page() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {Voucher && Voucher.map((voucher, index) => (
+                                {vouchers && vouchers.map((voucher, index) => (
                                     <TableRow key={index}>
                                         <TableCell className="font-medium text-2xl">
                                             {voucher.code}
