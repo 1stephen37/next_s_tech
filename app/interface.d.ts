@@ -2,12 +2,24 @@ interface Paging {
     total: number
 }
 
+interface Banner {
+    id_banner: string
+    id_product: string
+    slogan: string
+    description: string
+    status: number
+}
+
 interface Brand {
     id_brand: string;
     name: string;
     logo: string;
     status: number,
     count?: number;
+}
+
+interface BrandDetail extends Brand {
+    products: ProductBox;
 }
 
 interface ProductBox {

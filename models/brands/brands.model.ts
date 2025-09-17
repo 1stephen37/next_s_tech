@@ -2,7 +2,6 @@ import {ApiUrl, FetchGet, FetchGetWithToken, tableName} from "@/app/constants";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-
 const BrandsModel = {
     url: `${ApiUrl}${tableName.brands}`,
     GetAllBrands() {
@@ -25,7 +24,11 @@ const BrandsModel = {
     },
     GetBrandsLimitPage(page: number, limit: number) {
         const offset = (page - 1) * limit;
-        const {data: brands, error, isLoading}: { data: { data: Brand[], paging: Paging }, error: Error | any, isLoading: boolean } =
+        const {data: brands, error, isLoading}: {
+            data: { data: Brand[], paging: Paging },
+            error: Error | any,
+            isLoading: boolean
+        } =
             useSWR(this.url + `?offset=${offset}&limit=${limit}&page=${page}&role=admin`, FetchGet);
         return {
             data: brands?.data,
@@ -33,7 +36,16 @@ const BrandsModel = {
             isLoading,
             isError: error
         }
-    }
+    },
+    GetDetailBrandById(id: string) {
+        const {data: brand, error, isLoading}: { data: { data: BrandDetail }, error: Error | any, isLoading: boolean } =
+            useSWR(this.url + `/${id}`, FetchGet)
+        return {
+            data: brand?.data,
+            isLoading,
+            isError: error
+        }
+    },
 }
 
 export default BrandsModel

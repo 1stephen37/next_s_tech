@@ -37,7 +37,7 @@ function Page() {
     const search = useAppSelector((state) => state.search.searchContent);
     const [page, setPage] = useState(1);
     const {data: Brands, isLoading} = BrandsModel.GetAllBrands();
-    const [idBrand, setIdBrand] = useState('');
+    const [idBrand, setIdBrand] = useState(0);
     const {
         data: productsList,
         isLoading: isProductsListLoading,
@@ -60,11 +60,11 @@ function Page() {
 
     useEffect(() => {
         if (id_brand) {
-            setIdBrand(id_brand.toString());
+            setIdBrand(Number(id_brand));
         }
     }, [id_brand]);
 
-    const handleSwitchBrand = (id_brand: string) => {
+    const handleSwitchBrand = (id_brand: number) => {
         setPage(1);
         setIdBrand(id_brand);
     }
@@ -87,16 +87,16 @@ function Page() {
                         <div className="flex gap-10 items-center flex-wrap">
                             <h3 className="text-[2rem] font-semibold min-w-[100px]">Thương hiệu: </h3>
                             {Brands && Brands.map((brand, index) => (
-                                <div key={index} onClick={() => handleSwitchBrand(brand.id_brand)}
+                                <div key={index} onClick={() => handleSwitchBrand(Number(brand.id_brand))}
                                      className={cn(`relative shadow-md cursor-pointer border-solid rounded border-[.5px]
-                             border-gray-400 w-[150px] h-[35px] hover:border-orange-400 ${idBrand === brand.id_brand ? 'border-orange-400' : ''}`)}>
+                             border-gray-400 w-[150px] h-[35px] hover:border-orange-400 ${idBrand === Number(brand.id_brand) ? 'border-orange-400' : ''}`)}>
                                     <Image className={'object-contain'} alt={brand.name}
                                            src={ApiImage + brand.logo}
                                            fill
                                            priority={true}/>
                                 </div>
                             ))}
-                            <div onClick={() => setIdBrand('')} className="">
+                            <div onClick={() => setIdBrand(0)} className="">
                                 <MdOutlineCancelPresentation
                                     className='text-[3rem] cursor-pointer select-none hover:opacity-60'/>
                             </div>
@@ -131,16 +131,16 @@ function Page() {
                         <div className="flex gap-10 items-center flex-wrap">
                             <h3 className="text-[2rem] font-semibold min-w-[100px]">Thương hiệu: </h3>
                             {Brands && Brands.map((brand, index) => (
-                                <div key={index} onClick={() => handleSwitchBrand(brand.id_brand)}
+                                <div key={index} onClick={() => handleSwitchBrand(Number(brand.id_brand))}
                                      className={cn(`relative shadow-md cursor-pointer border-solid rounded border-[.5px]
-                             border-gray-400 w-[150px] h-[35px] hover:border-orange-400 ${idBrand === brand.id_brand ? 'border-orange-400' : ''}`)}>
+                             border-gray-400 w-[150px] h-[35px] hover:border-orange-400 ${idBrand === Number(brand.id_brand) ? 'border-orange-400' : ''}`)}>
                                     <Image className={'object-contain'} alt={brand.name}
                                            src={ApiImage + brand.logo}
                                            fill
                                            priority={true}/>
                                 </div>
                             ))}
-                            <div onClick={() => setIdBrand('')} className="">
+                            <div onClick={() => setIdBrand(0)} className="">
                                 <MdOutlineCancelPresentation
                                     className='text-[3rem] cursor-pointer select-none hover:opacity-60'/>
                             </div>

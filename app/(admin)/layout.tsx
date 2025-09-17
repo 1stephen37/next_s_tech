@@ -104,6 +104,14 @@ const linksChildPage = [
         name: "thương hiệu",
     },
     {
+        href: "/dashboard/brands/detail",
+        name: "chi tiết thương hiệu",
+    },
+    {
+        href: "/dashboard/brands/update",
+        name: "cập nhật thương hiệu",
+    },
+    {
         href: "/dashboard/products",
         name: "sản phẩm",
     },
